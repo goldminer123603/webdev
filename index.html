@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KTakour Tech Solutions | High-Performance Engineering & Digital Architecture</title>
+  <meta name="description" content="Custom web development, high-speed engineering, and digital brand design built to meet any demand." />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. CORE DESIGN SYSTEM, CUSTOM VARIABLES & ANIMATION TOKENS
+       ========================================================================== */
+    :root {
+      --bg-primary: #05070a;
+      --bg-secondary: #0b0f19;
+      --bg-tertiary: #111726;
+      --bg-card: rgba(15, 22, 36, 0.65);
+      --bg-card-hover: rgba(22, 32, 54, 0.85);
+      --bg-glass: rgba(255, 255, 255, 0.02);
+      
+      --accent-cyan: #00f2fe;
+      --accent-green: #00ff87;
+      --accent-blue: #4facfe;
+      --accent-purple: #7928ca;
+      --accent-pink: #ff0080;
+      
+      --accent-glow-cyan: rgba(0, 242, 254, 0.25);
+      --accent-glow-green: rgba(0, 255, 135, 0.25);
+      --accent-glow-purple: rgba(121, 40, 202, 0.25);
+      
+      --text-main: #f0f6fc;
+      --text-muted: #8b949e;
+      --text-dim: #484f58;
+      --text-dark: #010409;
+      
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-active: rgba(0, 242, 254, 0.5);
+      --border-glow: rgba(0, 255, 135, 0.5);
+      
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'Fira Code', monospace;
+      
+      --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+      --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-normal: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-slow: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+    }
+
+    /* ==========================================================================
+       2. GLOBAL RESET & ADVANCED ANIMATION DEFINITIONS
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      color-scheme: dark;
+      font-size: 16px;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Canvas Overlays */
+    #particle-canvas, #grid-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+    #particle-canvas { z-index: 1; opacity: 0.7; }
+    #grid-canvas { z-index: 0; opacity: 0.3; }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb {
+      background: #1a2233;
+      border-radius: var(--radius-full);
+      border: 2px solid var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
+
+    /* --- ANIMATION KEYFRAMES --- */
+    @keyframes pulseGlowCyan {
+      0% { box-shadow: 0 0 10px var(--accent-glow-cyan); }
+      50% { box-shadow: 0 0 35px var(--accent-cyan), 0 0 10px var(--accent-green); }
+      100% { box-shadow: 0 0 10px var(--accent-glow-cyan); }
+    }
+
+    @keyframes borderGradientBeam {
+      0% { border-color: var(--accent-cyan); }
+      33% { border-color: var(--accent-green); }
+      66% { border-color: var(--accent-purple); }
+      100% { border-color: var(--accent-cyan); }
+    }
+
+    @keyframes floatY {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    @keyframes logoPulse {
+      0% { filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.4)); }
+      50% { filter: drop-shadow(0 0 16px rgba(0, 255, 135, 0.7)); }
+      100% { filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.4)); }
+    }
+
+    /* Helper Utility Classes */
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-padding { padding: 140px 0; }
+
+    .text-gradient {
+      background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-green) 50%, var(--accent-blue) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 6s linear infinite;
+    }
+
+    .mono { font-family: var(--font-mono); }
+
+    /* ==========================================================================
+       3. NAVIGATION BAR & DYNAMIC LOGO ENGINE
+       ========================================================================== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(5, 7, 10, 0.85);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: var(--transition-normal);
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 90px;
+    }
+
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .logo-img-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-logo-img {
+      height: 48px;
+      width: auto;
+      object-fit: contain;
+      animation: logoPulse 4s ease-in-out infinite;
+      transition: transform var(--transition-fast);
+    }
+
+    .logo-wrapper:hover .nav-logo-img {
+      transform: scale(1.06) rotate(-2deg);
+    }
+
+    .logo-text-group {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .logo-brand-title {
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+    }
+
+    .logo-brand-subtitle {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent-green);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .logo-tag {
+      font-size: 0.65rem;
+      background: rgba(0, 242, 254, 0.1);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      margin-left: 6px;
+      align-self: center;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-item-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      position: relative;
+      padding: 8px 0;
+      transition: var(--transition-fast);
+    }
+
+    .nav-item-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
+      transition: var(--transition-normal);
+    }
+
+    .nav-item-link:hover { color: var(--accent-cyan); }
+    .nav-item-link:hover::after { width: 100%; }
+
+    .nav-action-btn {
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.1), rgba(0, 255, 135, 0.1));
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--transition-normal);
+      animation: pulseGlowCyan 4s infinite;
+    }
+
+    .nav-action-btn:hover {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
+      color: var(--text-dark);
+      box-shadow: 0 0 30px var(--accent-glow-cyan);
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       4. HERO SECTION & FLOATING ANIMATED CODE PLATFORM
+       ========================================================================== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 150px;
+      padding-bottom: 100px;
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0, 255, 135, 0.08);
+      border: 1px solid rgba(0, 255, 135, 0.3);
+      padding: 8px 18px;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      color: var(--accent-green);
+      margin-bottom: 28px;
+    }
+
+    .hero-badge-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-green);
+      animation: pulseGlowCyan 2s infinite;
+    }
+
+    .hero-title {
+      font-size: 4.2rem;
+      line-height: 1.08;
+      margin-bottom: 28px;
+      letter-spacing: -0.04em;
+      font-weight: 900;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      margin-bottom: 44px;
+      max-width: 620px;
+      line-height: 1.7;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      gap: 20px;
+    }
+
+    .btn-glow {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
+      color: var(--text-dark);
+      padding: 18px 36px;
+      border-radius: var(--radius-md);
+      font-weight: 800;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: var(--transition-normal);
+      box-shadow: 0 10px 30px var(--accent-glow-cyan);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-glow:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 45px var(--accent-glow-green);
+    }
+
+    .btn-outline {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 18px 36px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: var(--transition-normal);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    /* Terminal Frame */
+    .interactive-terminal-card {
+      background: rgba(8, 12, 20, 0.95);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 242, 254, 0.1);
+      animation: floatY 6s ease-in-out infinite, borderGradientBeam 8s infinite;
+      position: relative;
+    }
+
+    .terminal-topbar {
+      background: #0f1420;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .terminal-dots-box {
+      display: flex;
+      gap: 8px;
+    }
+
+    .terminal-dot-btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .td-red { background: #ff5f56; }
+    .td-yellow { background: #ffbd2e; }
+    .td-green { background: #27c93f; }
+
+    .terminal-filename {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .terminal-code-body {
+      padding: 28px;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: var(--text-main);
+      min-height: 320px;
+    }
+
+    /* ==========================================================================
+       5. COMPREHENSIVE "WHY WORK WITH US" SECTION
+       ========================================================================== */
+    .why-section-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      margin-top: 60px;
+    }
+
+    .why-feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 44px;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition-normal);
+    }
+
+    .why-feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
+      opacity: 0;
+      transition: var(--transition-fast);
+    }
+
+    .why-feature-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--border-active);
+      background: var(--bg-card-hover);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .why-feature-card:hover::before { opacity: 1; }
+
+    .why-icon-node {
+      width: 60px;
+      height: 60px;
+      background: rgba(0, 242, 254, 0.08);
+      border: 1px solid var(--accent-cyan);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 24px;
+      color: var(--accent-cyan);
+      transition: var(--transition-normal);
+    }
+
+    .why-feature-card:hover .why-icon-node {
+      background: var(--accent-cyan);
+      color: var(--text-dark);
+      box-shadow: 0 0 20px var(--accent-cyan);
+    }
+
+    .why-card-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .why-card-text {
+      color: var(--text-muted);
+      font-size: 1.02rem;
+      line-height: 1.7;
+    }
+
+    /* ==========================================================================
+       6. SHOWCASE & LIVE DEMO SUITE
+       ========================================================================== */
+    .showcase-wrapper {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      margin-top: 50px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+    }
+
+    .showcase-tabs {
+      display: flex;
+      gap: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 20px;
+      margin-bottom: 36px;
+    }
+
+    .showcase-tab-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 12px 28px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: var(--transition-fast);
+    }
+
+    .showcase-tab-btn.active, .showcase-tab-btn:hover {
+      background: rgba(0, 242, 254, 0.1);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .showcase-panel { display: none; }
+    .showcase-panel.active { display: block; }
+
+    /* Digital Letterhead Live Render */
+    .digital-letterhead-mockup {
+      background: #ffffff;
+      color: #111111;
+      border-radius: 8px;
+      padding: 50px;
+      max-width: 700px;
+      margin: 0 auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+      font-family: Arial, sans-serif;
+    }
+
+    .dlh-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid #00f2fe;
+      padding-bottom: 24px;
+      margin-bottom: 36px;
+    }
+
+    .dlh-company-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #0b0f19;
+      letter-spacing: -0.5px;
+    }
+
+    .dlh-meta {
+      text-align: right;
+      font-size: 0.8rem;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .dlh-body-content {
+      font-size: 0.95rem;
+      color: #333;
+      line-height: 1.7;
+    }
+
+    .dlh-footer {
+      margin-top: 50px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #888;
+    }
+
+    /* CSS Interactive Generator Demo */
+    .css-demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .css-controls-box {
+      background: var(--bg-primary);
+      padding: 24px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .css-slider-group {
+      margin-bottom: 20px;
+    }
+
+    .css-slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .css-range-input {
+      width: 100%;
+      accent-color: var(--accent-cyan);
+    }
+
+    .css-preview-box {
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+    }
+
+    .interactive-element-node {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
+      transition: all 0.1s ease;
+    }
+
+    /* ==========================================================================
+       7. PACKAGES & PRICING
+       ========================================================================== */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 36px;
+      margin-top: 60px;
+    }
+
+    .pricing-card-tier {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 48px 36px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: var(--transition-smooth);
+    }
+
+    .pricing-card-tier:hover {
+      transform: translateY(-10px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+    }
+
+    .pricing-card-tier.highlighted {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 40px var(--accent-glow-cyan);
+    }
+
+    .tier-badge {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
+      color: var(--text-dark);
+      font-weight: 900;
+      font-size: 0.75rem;
+      padding: 6px 20px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tier-name {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .tier-subtext {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      min-height: 48px;
+    }
+
+    .tier-price-val {
+      font-size: 3.5rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .tier-price-val span {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .tier-cedi-converted {
+      font-size: 0.88rem;
+      color: var(--accent-green);
+      margin-bottom: 36px;
+      display: block;
+    }
+
+    .tier-features-list {
+      list-style: none;
+      margin-bottom: 40px;
+      flex-grow: 1;
+    }
+
+    .tier-feature-item {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tier-feature-item::before {
+      content: "✓";
+      color: var(--accent-green);
+      font-weight: bold;
+    }
+
+    /* ==========================================================================
+       8. FLOATING DIRECT ACTION HUB & FOOTER
+       ========================================================================== */
+    .direct-action-hub {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .action-fab-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
+      color: var(--text-dark);
+      border: none;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 10px 30px var(--accent-glow-cyan);
+      transition: var(--transition-normal);
+    }
+
+    .action-fab-btn:hover {
+      transform: scale(1.1) rotate(90deg);
+      box-shadow: 0 15px 40px var(--accent-glow-green);
+    }
+
+    .action-popover {
+      display: none;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      width: 300px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      position: absolute;
+      bottom: 75px;
+      right: 0;
+    }
+
+    .action-popover.active { display: block; }
+
+    .popover-link-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      text-decoration: none;
+      margin-bottom: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: var(--transition-fast);
+    }
+
+    .popover-link-btn:hover {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      transform: translateX(-4px);
+    }
+
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 80px 0 40px 0;
+      background: var(--bg-primary);
+      font-size: 0.9rem;
+      color: var(--text-dim);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 50px;
+      margin-bottom: 50px;
+    }
+
+    @media (max-width: 968px) {
+      .hero-grid, .why-section-grid, .pricing-grid, .css-demo-grid, .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-title { font-size: 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dynamic Canvas Background Layers -->
+  <canvas id="particle-canvas"></canvas>
+  <canvas id="grid-canvas"></canvas>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="#" class="logo-wrapper">
+        <div class="logo-img-box">
+          <img src="logo.png" alt="KTakour Tech Solutions Logo" class="nav-logo-img" />
+        </div>
+        <div class="logo-text-group">
+          <span class="logo-brand-title">KTakour <span class="text-gradient">Tech</span></span>
+          <span class="logo-brand-subtitle">Solutions</span>
+        </div>
+        <span class="logo-tag mono">v2.6</span>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="#why-us" class="nav-item-link">Why Us</a></li>
+        <li><a href="#showcase" class="nav-item-link">Quality Showcase</a></li>
+        <li><a href="#packages" class="nav-item-link">Packages</a></li>
+      </ul>
+
+      <button class="nav-action-btn mono" onclick="toggleDirectHub()">Direct Line</button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          <span class="mono">Open-Minded Engineering — Ready for Any Demand</span>
+        </div>
+        <h1 class="hero-title">Adaptive Digital Systems & <span class="text-gradient">Brand Design</span></h1>
+        <p class="hero-subtitle">
+          We engineer tailored, ultra-fast websites and complete digital identity packages designed with clean code, lightning speed, and maximum flexibility.
+        </p>
+        <div class="hero-cta-group">
+          <a href="#packages" class="btn-glow">Explore Packages</a>
+          <a href="#showcase" class="btn-outline">Test Quality Showcase</a>
+        </div>
+      </div>
+
+      <!-- Interactive Code Execution Window -->
+      <div class="interactive-terminal-card">
+        <div class="terminal-topbar">
+          <div class="terminal-dots-box">
+            <span class="terminal-dot-btn td-red"></span>
+            <span class="terminal-dot-btn td-yellow"></span>
+            <span class="terminal-dot-btn td-green"></span>
+          </div>
+          <span class="terminal-filename mono">KTakour_Architecture.js</span>
+        </div>
+        <div class="terminal-code-body mono" id="typewriter-terminal">
+          <!-- Populated by JS Typewriter Animation -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dedicated "Why Us" Section -->
+  <section id="why-us" class="section-padding">
+    <div class="container">
+      <div style="text-align: center; max-width: 700px; margin: 0 auto 40px auto;">
+        <h2 style="font-size: 2.8rem; font-weight: 900;" class="mono">Why Work With KTakour?</h2>
+        <p style="color: var(--text-muted); font-size: 1.1rem;">Engineered from the ground up to deliver fast, highly optimized results with complete adaptability.</p>
+      </div>
+
+      <div class="why-section-grid">
+        <div class="why-feature-card">
+          <div class="why-icon-node">⚡</div>
+          <h3 class="why-card-title">Rapid 72-Hour Delivery</h3>
+          <p class="why-card-text">Speed matters. Our optimized workflow lets us build, test, and deploy full brand kits and core web systems in as little as 48 to 72 hours.</p>
+        </div>
+
+        <div class="why-feature-card">
+          <div class="why-icon-node">🔓</div>
+          <h3 class="why-card-title">Open-Minded & Adaptable</h3>
+          <p class="why-card-text">No rigid templates or strict restrictions. We adapt to whatever custom features, unique page layouts, or specific client needs you bring to the table.</p>
+        </div>
+
+        <div class="why-feature-card">
+          <div class="why-icon-node">🚀</div>
+          <h3 class="why-card-title">High-Speed Optimized Code</h3>
+          <p class="why-card-text">Every single line of HTML, CSS, and JavaScript is hand-crafted for high performance, immediate mobile responsiveness, and high Google SEO visibility.</p>
+        </div>
+
+        <div class="why-feature-card">
+          <div class="why-icon-node">💎</div>
+          <h3 class="why-card-title">Affordable Premium Standards</h3>
+          <p class="why-card-text">Get high agency-level visual quality, clean vector designs, and high-performance software at accessible, transparent tier prices.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Showcase Section -->
+  <section id="showcase" class="section-padding" style="background: var(--bg-secondary);">
+    <div class="container">
+      <div style="text-align: center; max-width: 700px; margin: 0 auto 30px auto;">
+        <h2 style="font-size: 2.8rem; font-weight: 900;">Quality & Technical Showcase</h2>
+        <p style="color: var(--text-muted);">Preview the exact standards and responsive execution built into every deliverable.</p>
+      </div>
+
+      <div class="showcase-wrapper">
+        <div class="showcase-tabs">
+          <button class="showcase-tab-btn active" onclick="switchShowcaseTab('letterhead')">Digital Letterhead Demo</button>
+          <button class="showcase-tab-btn" onclick="switchShowcaseTab('css')">Live Interactive CSS Playground</button>
+        </div>
+
+        <!-- Tab 1: Letterhead Render -->
+        <div id="tab-showcase-letterhead" class="showcase-panel active">
+          <div class="digital-letterhead-mockup">
+            <div class="dlh-header">
+              <div>
+                <div class="dlh-company-title">KTakour ENTERPRISES</div>
+                <div style="font-size:0.75rem; color:#00f2fe; font-weight:bold;">CAPITAL & DIGITAL ARCHITECTURE</div>
+              </div>
+              <div class="dlh-meta">
+                Ref: #KT-2026-990<br>
+                Date: July 31, 2026
+              </div>
+            </div>
+            <div class="dlh-body-content">
+              <p><strong>RE: Digital Branding & Technical Architecture Agreement</strong></p><br>
+              <p>Dear Valued Client,</p><br>
+              <p>This document represents the exact typography layout, visual spacing, and brand integration included in our <strong>Basic Business Package</strong>. Deliverables are provided in clean vector PDF and editable Word format.</p>
+            </div>
+            <div class="dlh-footer">
+              <span>KTakour Tech Solutions</span>
+              <span>Verified Digital Asset</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Interactive CSS Studio -->
+        <div id="tab-showcase-css" class="showcase-panel">
+          <div class="css-demo-grid">
+            <div class="css-controls-box">
+              <h3 style="margin-bottom: 20px;">Real-Time CSS Parameter Tuning</h3>
+              <div class="css-slider-group">
+                <div class="css-slider-label"><span>Border Radius</span><span id="val-radius" class="mono">12px</span></div>
+                <input type="range" class="css-range-input" min="0" max="50" value="12" oninput="updateCssNode('radius', this.value)">
+              </div>
+              <div class="css-slider-group">
+                <div class="css-slider-label"><span>Glow Shadow Radius</span><span id="val-glow" class="mono">20px</span></div>
+                <input type="range" class="css-range-input" min="0" max="60" value="20" oninput="updateCssNode('glow', this.value)">
+              </div>
+              <div class="css-slider-group">
+                <div class="css-slider-label"><span>Rotation Angle</span><span id="val-rotate" class="mono">0deg</span></div>
+                <input type="range" class="css-range-input" min="0" max="360" value="0" oninput="updateCssNode('rotate', this.value)">
+              </div>
+            </div>
+
+            <div class="css-preview-box">
+              <div class="interactive-element-node" id="css-demo-node"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Packages & Pricing -->
+  <section id="packages" class="section-padding">
+    <div class="container">
+      <div style="text-align: center; max-width: 700px; margin: 0 auto 40px auto;">
+        <h2 style="font-size: 2.8rem; font-weight: 900;" class="mono">Service Tier Packages</h2>
+        <p style="color: var(--text-muted);">Clear, transparent pricing. Choose the tier that matches your exact growth goals.</p>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Tier 1 -->
+        <div class="pricing-card-tier">
+          <h3 class="tier-name">Basic Business</h3>
+          <p class="tier-subtext">Essential digital branding assets to make your business look professional on day one.</p>
+          <div class="tier-price-val">$40 <span>USD</span></div>
+          <span class="tier-cedi-converted mono">~GH₵470 Equivalent</span>
+          <ul class="tier-features-list">
+            <li class="tier-feature-item">Digital Letterhead (.docx & PDF)</li>
+            <li class="tier-feature-item">Clickable HTML Email Signature</li>
+            <li class="tier-feature-item">Matching Invoice Design Template</li>
+            <li class="tier-feature-item">Social Media Profile Banner</li>
+            <li class="tier-feature-item">48 to 72 Hour Turnaround</li>
+          </ul>
+          <button class="nav-action-btn mono" onclick="toggleDirectHub()" style="width:100%; text-align:center;">Select Tier</button>
+        </div>
+
+        <!-- Tier 2 -->
+        <div class="pricing-card-tier highlighted">
+          <span class="tier-badge">Most Popular</span>
+          <h3 class="tier-name">Web Development</h3>
+          <p class="tier-subtext">Custom responsive website engineered for high speed, lead generation, and sales conversions.</p>
+          <div class="tier-price-val">$350 <span>USD</span></div>
+          <span class="tier-cedi-converted mono">~GH₵4,100 Equivalent</span>
+          <ul class="tier-features-list">
+            <li class="tier-feature-item">3–5 Custom Responsive Web Pages</li>
+            <li class="tier-feature-item">Hand-coded High-Speed Architecture</li>
+            <li class="tier-feature-item">Contact & Lead Integration</li>
+            <li class="tier-feature-item">SEO Setup & Google Indexing</li>
+            <li class="tier-feature-item">Free Deployment & Hosting Setup</li>
+          </ul>
+          <button class="btn-glow" onclick="toggleDirectHub()" style="width:100%; justify-content:center;">Launch Website</button>
+        </div>
+
+        <!-- Tier 3 -->
+        <div class="pricing-card-tier">
+          <h3 class="tier-name">Full Business Bundle</h3>
+          <p class="tier-subtext">Complete end-to-end web deployment paired with a full digital identity suite.</p>
+          <div class="tier-price-val">$550 <span>USD</span></div>
+          <span class="tier-cedi-converted mono">~GH₵6,400 Equivalent</span>
+          <ul class="tier-features-list">
+            <li class="tier-feature-item">Everything in Basic Branding Package</li>
+            <li class="tier-feature-item">Everything in Web Dev Package</li>
+            <li class="tier-feature-item">Complete Brand Style Guide</li>
+            <li class="tier-feature-item">Digital Interactive vCard Page</li>
+            <li class="tier-feature-item">30 Days Priority Technical Support</li>
+          </ul>
+          <button class="nav-action-btn mono" onclick="toggleDirectHub()" style="width:100%; text-align:center;">Get Full Package</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Floating Direct Action Hub -->
+  <div class="direct-action-hub">
+    <div class="action-popover" id="direct-popover">
+      <h4 style="margin-bottom: 12px; color: var(--text-main);">Connect Directly</h4>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">Reach out via your preferred network to lock in a project slot:</p>
+      <a href="https://wa.me/" target="_blank" class="popover-link-btn">
+        <span>💬</span> Chat on WhatsApp
+      </a>
+      <a href="mailto:contact@ktakour.tech" class="popover-link-btn">
+        <span>✉️</span> Direct Email Line
+      </a>
+    </div>
+
+    <button class="action-fab-btn" onclick="toggleDirectHub()" title="Open Direct Communication Hub">
+      ⚡
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div style="margin-bottom: 16px; display: flex; align-items: center; gap: 12px;">
+            <img src="logo.png" alt="KTakour Tech Solutions Logo" style="height: 40px; width: auto;" />
+            <div style="display: flex; flex-direction: column; line-height: 1.1;">
+              <span style="font-size: 1.1rem; font-weight: 900; color: #fff;">KTakour <span class="text-gradient">Tech</span></span>
+              <span style="font-size: 0.65rem; font-weight: 700; color: var(--accent-green); letter-spacing: 0.1em; text-transform: uppercase;">Solutions</span>
+            </div>
+          </div>
+          <p style="color: var(--text-muted);">Open-minded digital solutions engineered to meet any technical or branding demand.</p>
+        </div>
+        <div>
+          <h4 style="color: var(--text-main); margin-bottom: 16px;">Quick Links</h4>
+          <p><a href="#why-us" style="color:inherit; text-decoration:none;">Why Us</a></p>
+          <p><a href="#showcase" style="color:inherit; text-decoration:none;">Showcase</a></p>
+          <p><a href="#packages" style="color:inherit; text-decoration:none;">Packages</a></p>
+        </div>
+        <div>
+          <h4 style="color: var(--text-main); margin-bottom: 16px;">Architecture</h4>
+          <p class="mono">Pure HTML5 / CSS3 / ES6</p>
+          <p class="mono">Zero Dependencies</p>
+          <p class="mono">72-Hour Execution</p>
+        </div>
+      </div>
+      <div style="text-align: center; border-top: 1px solid var(--border-subtle); padding-top: 30px;">
+        © 2026 KTakour Tech Solutions. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Engine -->
+  <script>
+    // Direct Hub Toggle
+    function toggleDirectHub() {
+      const popover = document.getElementById('direct-popover');
+      popover.classList.toggle('active');
+    }
+
+    // Tab Handler
+    function switchShowcaseTab(tabName) {
+      document.querySelectorAll('.showcase-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.showcase-panel').forEach(panel => panel.classList.remove('active'));
+
+      if (tabName === 'letterhead') {
+        document.querySelectorAll('.showcase-tab-btn')[0].classList.add('active');
+        document.getElementById('tab-showcase-letterhead').classList.add('active');
+      } else {
+        document.querySelectorAll('.showcase-tab-btn')[1].classList.add('active');
+        document.getElementById('tab-showcase-css').classList.add('active');
+      }
+    }
+
+    // CSS Playground Tuner
+    function updateCssNode(param, value) {
+      const node = document.getElementById('css-demo-node');
+      if (param === 'radius') {
+        node.style.borderRadius = value + 'px';
+        document.getElementById('val-radius').textContent = value + 'px';
+      } else if (param === 'glow') {
+        node.style.boxShadow = `0 0 ${value}px #00f2fe`;
+        document.getElementById('val-glow').textContent = value + 'px';
+      } else if (param === 'rotate') {
+        node.style.transform = `rotate(${value}deg)`;
+        document.getElementById('val-rotate').textContent = value + 'deg';
+      }
+    }
+
+    // Typewriter Console Simulation
+    const codeLines = [
+      "// KTakour Engine Configuration",
+      "const KTakour = {",
+      "  deliverySpeed: '72 Hours',",
+      "  adaptability: '100% Unlimited',",
+      "  codeBenchmark: 'Lighthouse 100/100',",
+      "  brandingDeliverables: ['Letterheads', 'Invoices', 'Email Signatures']",
+      "};",
+      "",
+      "// Execute System Deployment",
+      "function deployProject(clientSpec) {",
+      "  return KTakour.buildSolution(clientSpec);",
+      "}"
+    ];
+
+    let lineIndex = 0;
+    const terminalElement = document.getElementById('typewriter-terminal');
+
+    function renderTerminalCode() {
+      if (lineIndex < codeLines.length) {
+        const p = document.createElement('p');
+        p.textContent = codeLines[lineIndex];
+        terminalElement.appendChild(p);
+        lineIndex++;
+        setTimeout(renderTerminalCode, 150);
+      }
+    }
+    renderTerminalCode();
+
+    // Particle Background System
+    const pCanvas = document.getElementById('particle-canvas');
+    const pCtx = pCanvas.getContext('2d');
+    pCanvas.width = window.innerWidth;
+    pCanvas.height = window.innerHeight;
+
+    let particles = [];
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        x: Math.random() * pCanvas.width,
+        y: Math.random() * pCanvas.height,
+        radius: Math.random() * 2 + 1,
+        dx: (Math.random() - 0.5) * 0.6,
+        dy: (Math.random() - 0.5) * 0.6
+      });
+    }
+
+    function animateParticles() {
+      requestAnimationFrame(animateParticles);
+      pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+      pCtx.fillStyle = 'rgba(0, 242, 254, 0.4)';
+
+      particles.forEach(p => {
+        pCtx.beginPath();
+        pCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        pCtx.fill();
+
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > pCanvas.width) p.dx = -p.dx;
+        if (p.y < 0 || p.y > pCanvas.height) p.dy = -p.dy;
+      });
+    }
+    animateParticles();
+  </script>
+</body>
+</html>

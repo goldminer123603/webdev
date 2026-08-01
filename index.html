@@ -13,7 +13,7 @@
 
   <style>
     /* ==========================================================================
-       1. CORE DESIGN SYSTEM, CUSTOM VARIABLES & ANIMATION TOKENS
+       1. CORE DESIGN SYSTEM & CUSTOM VARIABLES
        ========================================================================== */
     :root {
       --bg-primary: #05070a;
@@ -29,9 +29,9 @@
       --accent-purple: #7928ca;
       --accent-pink: #ff0080;
       
-      --accent-glow-cyan: rgba(0, 242, 254, 0.25);
-      --accent-glow-green: rgba(0, 255, 135, 0.25);
-      --accent-glow-purple: rgba(121, 40, 202, 0.25);
+      --accent-glow-cyan: rgba(0, 242, 254, 0.35);
+      --accent-glow-green: rgba(0, 255, 135, 0.35);
+      --accent-glow-purple: rgba(121, 40, 202, 0.35);
       
       --text-main: #f0f6fc;
       --text-muted: #8b949e;
@@ -45,8 +45,6 @@
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --font-mono: 'Fira Code', monospace;
       
-      --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6);
-      --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
       --transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
       --transition-normal: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       --transition-slow: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -79,7 +77,6 @@
       line-height: 1.6;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
     /* Canvas Overlays */
@@ -105,10 +102,10 @@
     }
     ::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
 
-    /* --- ANIMATION KEYFRAMES --- */
+    /* --- KEYFRAME ANIMATIONS --- */
     @keyframes pulseGlowCyan {
       0% { box-shadow: 0 0 10px var(--accent-glow-cyan); }
-      50% { box-shadow: 0 0 35px var(--accent-cyan), 0 0 10px var(--accent-green); }
+      50% { box-shadow: 0 0 35px var(--accent-cyan), 0 0 15px var(--accent-green); }
       100% { box-shadow: 0 0 10px var(--accent-glow-cyan); }
     }
 
@@ -125,6 +122,12 @@
       100% { transform: translateY(0px); }
     }
 
+    @keyframes floatCardSlow {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0px); }
+    }
+
     @keyframes shimmer {
       0% { background-position: -200% 0; }
       100% { background-position: 200% 0; }
@@ -132,8 +135,13 @@
 
     @keyframes logoPulse {
       0% { filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.4)); }
-      50% { filter: drop-shadow(0 0 16px rgba(0, 255, 135, 0.7)); }
+      50% { filter: drop-shadow(0 0 18px rgba(0, 255, 135, 0.8)); }
       100% { filter: drop-shadow(0 0 6px rgba(0, 242, 254, 0.4)); }
+    }
+
+    @keyframes scanlineSweep {
+      0% { top: -100%; }
+      100% { top: 200%; }
     }
 
     /* Helper Utility Classes */
@@ -158,7 +166,7 @@
     .mono { font-family: var(--font-mono); }
 
     /* ==========================================================================
-       3. NAVIGATION BAR & DYNAMIC LOGO ENGINE
+       3. NAVIGATION BAR
        ========================================================================== */
     .navbar {
       position: fixed;
@@ -188,12 +196,6 @@
       color: var(--text-main);
     }
 
-    .logo-img-box {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
     .nav-logo-img {
       height: 48px;
       width: auto;
@@ -203,13 +205,7 @@
     }
 
     .logo-wrapper:hover .nav-logo-img {
-      transform: scale(1.06) rotate(-2deg);
-    }
-
-    .logo-text-group {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.1;
+      transform: scale(1.08) rotate(-3deg);
     }
 
     .logo-brand-title {
@@ -236,7 +232,6 @@
       padding: 2px 6px;
       border-radius: var(--radius-sm);
       margin-left: 6px;
-      align-self: center;
     }
 
     .nav-menu {
@@ -291,7 +286,7 @@
     }
 
     /* ==========================================================================
-       4. HERO SECTION & FLOATING ANIMATED CODE PLATFORM
+       4. HERO SECTION
        ========================================================================== */
     .hero {
       min-height: 100vh;
@@ -365,10 +360,12 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
+      position: relative;
+      overflow: hidden;
     }
 
     .btn-glow:hover {
-      transform: translateY(-3px);
+      transform: translateY(-4px) scale(1.02);
       box-shadow: 0 15px 45px var(--accent-glow-green);
     }
 
@@ -391,9 +388,10 @@
       background: rgba(255, 255, 255, 0.08);
       border-color: var(--accent-cyan);
       color: var(--accent-cyan);
+      transform: translateY(-3px);
     }
 
-    /* Terminal Frame */
+    /* Terminal Window */
     .interactive-terminal-card {
       background: rgba(8, 12, 20, 0.95);
       border: 1px solid var(--border-subtle);
@@ -413,24 +411,11 @@
       border-bottom: 1px solid var(--border-subtle);
     }
 
-    .terminal-dots-box {
-      display: flex;
-      gap: 8px;
-    }
-
-    .terminal-dot-btn {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
+    .terminal-dots-box { display: flex; gap: 8px; }
+    .terminal-dot-btn { width: 12px; height: 12px; border-radius: 50%; }
     .td-red { background: #ff5f56; }
     .td-yellow { background: #ffbd2e; }
     .td-green { background: #27c93f; }
-
-    .terminal-filename {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
 
     .terminal-code-body {
       padding: 28px;
@@ -441,7 +426,7 @@
     }
 
     /* ==========================================================================
-       5. COMPREHENSIVE "WHY WORK WITH US" SECTION
+       5. WHY US SECTION
        ========================================================================== */
     .why-section-grid {
       display: grid;
@@ -499,7 +484,8 @@
     .why-feature-card:hover .why-icon-node {
       background: var(--accent-cyan);
       color: var(--text-dark);
-      box-shadow: 0 0 20px var(--accent-cyan);
+      box-shadow: 0 0 25px var(--accent-cyan);
+      transform: rotate(5deg) scale(1.1);
     }
 
     .why-card-title {
@@ -515,7 +501,7 @@
     }
 
     /* ==========================================================================
-       6. SHOWCASE & LIVE DEMO SUITE
+       6. QUALITY SHOWCASE
        ========================================================================== */
     .showcase-wrapper {
       background: var(--bg-secondary);
@@ -555,7 +541,7 @@
     .showcase-panel { display: none; }
     .showcase-panel.active { display: block; }
 
-    /* Digital Letterhead Live Render */
+    /* Digital Letterhead Demo */
     .digital-letterhead-mockup {
       background: #ffffff;
       color: #111111;
@@ -580,30 +566,12 @@
       font-size: 1.5rem;
       font-weight: 900;
       color: #0b0f19;
-      letter-spacing: -0.5px;
     }
 
     .dlh-meta {
       text-align: right;
       font-size: 0.8rem;
       color: #555;
-      line-height: 1.5;
-    }
-
-    .dlh-body-content {
-      font-size: 0.95rem;
-      color: #333;
-      line-height: 1.7;
-    }
-
-    .dlh-footer {
-      margin-top: 50px;
-      padding-top: 20px;
-      border-top: 1px solid #eee;
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: #888;
     }
 
     /* CSS Interactive Generator Demo */
@@ -621,9 +589,7 @@
       border: 1px solid var(--border-subtle);
     }
 
-    .css-slider-group {
-      margin-bottom: 20px;
-    }
+    .css-slider-group { margin-bottom: 20px; }
 
     .css-slider-label {
       display: flex;
@@ -633,10 +599,7 @@
       margin-bottom: 8px;
     }
 
-    .css-range-input {
-      width: 100%;
-      accent-color: var(--accent-cyan);
-    }
+    .css-range-input { width: 100%; accent-color: var(--accent-cyan); }
 
     .css-preview-box {
       height: 250px;
@@ -656,13 +619,22 @@
     }
 
     /* ==========================================================================
-       7. PACKAGES & PRICING
+       7. FULLY CLICKABLE ENHANCED PRICING CARDS
        ========================================================================== */
     .pricing-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 36px;
       margin-top: 60px;
+    }
+
+    /* Package Cards converted into direct Mailto Links */
+    .pricing-card-link {
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      position: relative;
     }
 
     .pricing-card-tier {
@@ -672,18 +644,50 @@
       padding: 48px 36px;
       display: flex;
       flex-direction: column;
+      flex-grow: 1;
       position: relative;
-      transition: var(--transition-smooth);
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                  border-color 0.4s ease, 
+                  box-shadow 0.4s ease, 
+                  background-color 0.4s ease;
+      animation: floatCardSlow 6s ease-in-out infinite;
     }
 
-    .pricing-card-tier:hover {
-      transform: translateY(-10px);
+    .pricing-card-link:nth-child(2) .pricing-card-tier {
+      animation-delay: -2s;
+    }
+    .pricing-card-link:nth-child(3) .pricing-card-tier {
+      animation-delay: -4s;
+    }
+
+    /* Dynamic Hover Glow Beam Effect */
+    .pricing-card-tier::before {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: -100%;
+      width: 300%;
+      height: 300%;
+      background: radial-gradient(circle, var(--accent-glow-cyan) 0%, transparent 60%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .pricing-card-link:hover .pricing-card-tier {
+      transform: translateY(-14px) scale(1.02);
       border-color: var(--accent-cyan);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+      background: var(--bg-card-hover);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 0 0 30px var(--accent-glow-cyan);
+    }
+
+    .pricing-card-link:hover .pricing-card-tier::before {
+      opacity: 1;
     }
 
     .pricing-card-tier.highlighted {
-      background: var(--bg-card-hover);
+      background: rgba(22, 32, 54, 0.85);
       border-color: var(--accent-cyan);
       box-shadow: 0 0 40px var(--accent-glow-cyan);
     }
@@ -701,12 +705,18 @@
       border-radius: var(--radius-full);
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      box-shadow: 0 0 20px var(--accent-glow-green);
     }
 
     .tier-name {
       font-size: 1.8rem;
       font-weight: 800;
       margin-bottom: 10px;
+      transition: color var(--transition-fast);
+    }
+
+    .pricing-card-link:hover .tier-name {
+      color: var(--accent-cyan);
     }
 
     .tier-subtext {
@@ -749,6 +759,11 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      transition: color var(--transition-fast);
+    }
+
+    .pricing-card-link:hover .tier-feature-item {
+      color: var(--text-main);
     }
 
     .tier-feature-item::before {
@@ -757,8 +772,46 @@
       font-weight: bold;
     }
 
+    /* Animated Card Action Button */
+    .card-action-btn-styled {
+      width: 100%;
+      text-align: center;
+      padding: 16px 24px;
+      border-radius: var(--radius-md);
+      font-weight: 800;
+      font-size: 0.95rem;
+      transition: var(--transition-normal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .pricing-card-link:hover .card-action-btn-styled {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
+      color: var(--text-dark);
+      box-shadow: 0 0 25px var(--accent-glow-cyan);
+    }
+
+    /* Click Hint Overlay */
+    .click-to-email-hint {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-cyan);
+      margin-top: 10px;
+      text-align: center;
+      opacity: 0.8;
+      transition: opacity var(--transition-fast);
+    }
+
+    .pricing-card-link:hover .click-to-email-hint {
+      opacity: 1;
+      font-weight: bold;
+    }
+
     /* ==========================================================================
-       8. FLOATING DIRECT ACTION HUB & FOOTER
+       8. FLOATING ACTION HUB & FOOTER
        ========================================================================== */
     .direct-action-hub {
       position: fixed;
@@ -785,48 +838,13 @@
       cursor: pointer;
       box-shadow: 0 10px 30px var(--accent-glow-cyan);
       transition: var(--transition-normal);
+      text-decoration: none;
+      animation: pulseGlowCyan 3s infinite;
     }
 
     .action-fab-btn:hover {
-      transform: scale(1.1) rotate(90deg);
+      transform: scale(1.15) rotate(10deg);
       box-shadow: 0 15px 40px var(--accent-glow-green);
-    }
-
-    .action-popover {
-      display: none;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      width: 300px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-      position: absolute;
-      bottom: 75px;
-      right: 0;
-    }
-
-    .action-popover.active { display: block; }
-
-    .popover-link-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      color: var(--text-main);
-      text-decoration: none;
-      margin-bottom: 10px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: var(--transition-fast);
-    }
-
-    .popover-link-btn:hover {
-      border-color: var(--accent-cyan);
-      color: var(--accent-cyan);
-      transform: translateX(-4px);
     }
 
     footer {
@@ -854,7 +872,7 @@
 </head>
 <body>
 
-  <!-- Dynamic Canvas Background Layers -->
+  <!-- Background Animated Layers -->
   <canvas id="particle-canvas"></canvas>
   <canvas id="grid-canvas"></canvas>
 
@@ -862,10 +880,8 @@
   <nav class="navbar">
     <div class="container nav-container">
       <a href="#" class="logo-wrapper">
-        <div class="logo-img-box">
-          <img src="logo.png" alt="KTakour Tech Solutions Logo" class="nav-logo-img" />
-        </div>
-        <div class="logo-text-group">
+        <img src="logo.png" alt="KTakour Tech Solutions Logo" class="nav-logo-img" />
+        <div style="display:flex; flex-direction:column;">
           <span class="logo-brand-title">KTakour <span class="text-gradient">Tech</span></span>
           <span class="logo-brand-subtitle">Solutions</span>
         </div>
@@ -878,7 +894,7 @@
         <li><a href="#packages" class="nav-item-link">Packages</a></li>
       </ul>
 
-      <button class="nav-action-btn mono" onclick="toggleDirectHub()">Direct Line</button>
+      <a href="mailto:ktakour.techsolutions2026@gmail.com?subject=Inquiry%20regarding%20KTakour%20Tech%20Services" class="nav-action-btn mono">Email Us Direct</a>
     </div>
   </nav>
 
@@ -895,7 +911,7 @@
           We engineer tailored, ultra-fast websites and complete digital identity packages designed with clean code, lightning speed, and maximum flexibility.
         </p>
         <div class="hero-cta-group">
-          <a href="#packages" class="btn-glow">Explore Packages</a>
+          <a href="#packages" class="btn-glow">Explore Packages ➔</a>
           <a href="#showcase" class="btn-outline">Test Quality Showcase</a>
         </div>
       </div>
@@ -917,7 +933,7 @@
     </div>
   </section>
 
-  <!-- Dedicated "Why Us" Section -->
+  <!-- Why Us Section -->
   <section id="why-us" class="section-padding">
     <div class="container">
       <div style="text-align: center; max-width: 700px; margin: 0 auto 40px auto;">
@@ -977,17 +993,13 @@
               </div>
               <div class="dlh-meta">
                 Ref: #KT-2026-990<br>
-                Date: July 31, 2026
+                Date: August 1, 2026
               </div>
             </div>
             <div class="dlh-body-content">
               <p><strong>RE: Digital Branding & Technical Architecture Agreement</strong></p><br>
               <p>Dear Valued Client,</p><br>
               <p>This document represents the exact typography layout, visual spacing, and brand integration included in our <strong>Basic Business Package</strong>. Deliverables are provided in clean vector PDF and editable Word format.</p>
-            </div>
-            <div class="dlh-footer">
-              <span>KTakour Tech Solutions</span>
-              <span>Verified Digital Asset</span>
             </div>
           </div>
         </div>
@@ -1021,83 +1033,83 @@
     </div>
   </section>
 
-  <!-- Packages & Pricing -->
+  <!-- Packages & Pricing (ALL CARDS DIRECTLY LINK TO EMAIL) -->
   <section id="packages" class="section-padding">
     <div class="container">
       <div style="text-align: center; max-width: 700px; margin: 0 auto 40px auto;">
         <h2 style="font-size: 2.8rem; font-weight: 900;" class="mono">Service Tier Packages</h2>
-        <p style="color: var(--text-muted);">Clear, transparent pricing. Choose the tier that matches your exact growth goals.</p>
+        <p style="color: var(--text-muted);">Click on any package card to email us directly with your order pre-selected.</p>
       </div>
 
       <div class="pricing-grid">
-        <!-- Tier 1 -->
-        <div class="pricing-card-tier">
-          <h3 class="tier-name">Basic Business</h3>
-          <p class="tier-subtext">Essential digital branding assets to make your business look professional on day one.</p>
-          <div class="tier-price-val">$40 <span>USD</span></div>
-          <span class="tier-cedi-converted mono">~GH₵470 Equivalent</span>
-          <ul class="tier-features-list">
-            <li class="tier-feature-item">Digital Letterhead (.docx & PDF)</li>
-            <li class="tier-feature-item">Clickable HTML Email Signature</li>
-            <li class="tier-feature-item">Matching Invoice Design Template</li>
-            <li class="tier-feature-item">Social Media Profile Banner</li>
-            <li class="tier-feature-item">48 to 72 Hour Turnaround</li>
-          </ul>
-          <button class="nav-action-btn mono" onclick="toggleDirectHub()" style="width:100%; text-align:center;">Select Tier</button>
-        </div>
+        
+        <!-- Tier 1 Card Link -->
+        <a href="mailto:ktakour.techsolutions2026@gmail.com?subject=Order%20Inquiry:%20Basic%20Business%20Package%20($40)&body=Hello%20KTakour%20Tech%20Solutions,%0A%0AI%20would%20like%20to%20order/inquire%20about%20the%20Basic%20Business%20Package%20($40).%20Please%20let%20me%20know%20the%20next%20steps.%0A%0AThank%20you!" class="pricing-card-link">
+          <div class="pricing-card-tier">
+            <h3 class="tier-name">Basic Business</h3>
+            <p class="tier-subtext">Essential digital branding assets to make your business look professional on day one.</p>
+            <div class="tier-price-val">$40 <span>USD</span></div>
+            <span class="tier-cedi-converted mono">~GH₵470 Equivalent</span>
+            <ul class="tier-features-list">
+              <li class="tier-feature-item">Digital Letterhead (.docx & PDF)</li>
+              <li class="tier-feature-item">Clickable HTML Email Signature</li>
+              <li class="tier-feature-item">Matching Invoice Design Template</li>
+              <li class="tier-feature-item">Social Media Profile Banner</li>
+              <li class="tier-feature-item">48 to 72 Hour Turnaround</li>
+            </ul>
+            <div class="card-action-btn-styled nav-action-btn mono">Select Tier ✉️</div>
+            <span class="click-to-email-hint">Click Card to Email Direct</span>
+          </div>
+        </a>
 
-        <!-- Tier 2 -->
-        <div class="pricing-card-tier highlighted">
-          <span class="tier-badge">Most Popular</span>
-          <h3 class="tier-name">Web Development</h3>
-          <p class="tier-subtext">Custom responsive website engineered for high speed, lead generation, and sales conversions.</p>
-          <div class="tier-price-val">$350 <span>USD</span></div>
-          <span class="tier-cedi-converted mono">~GH₵4,100 Equivalent</span>
-          <ul class="tier-features-list">
-            <li class="tier-feature-item">3–5 Custom Responsive Web Pages</li>
-            <li class="tier-feature-item">Hand-coded High-Speed Architecture</li>
-            <li class="tier-feature-item">Contact & Lead Integration</li>
-            <li class="tier-feature-item">SEO Setup & Google Indexing</li>
-            <li class="tier-feature-item">Free Deployment & Hosting Setup</li>
-          </ul>
-          <button class="btn-glow" onclick="toggleDirectHub()" style="width:100%; justify-content:center;">Launch Website</button>
-        </div>
+        <!-- Tier 2 Card Link (Most Popular) -->
+        <a href="mailto:ktakour.techsolutions2026@gmail.com?subject=Order%20Inquiry:%20Web%20Development%20Package%20($350)&body=Hello%20KTakour%20Tech%20Solutions,%0A%0AI%20would%20like%20to%20order/inquire%20about%20the%20Web%20Development%20Package%20($350).%20Please%20let%20me%20know%20the%20next%20steps.%0A%0AThank%20you!" class="pricing-card-link">
+          <div class="pricing-card-tier highlighted">
+            <span class="tier-badge">Most Popular</span>
+            <h3 class="tier-name">Web Development</h3>
+            <p class="tier-subtext">Custom responsive website engineered for high speed, lead generation, and sales conversions.</p>
+            <div class="tier-price-val">$350 <span>USD</span></div>
+            <span class="tier-cedi-converted mono">~GH₵4,100 Equivalent</span>
+            <ul class="tier-features-list">
+              <li class="tier-feature-item">3–5 Custom Responsive Web Pages</li>
+              <li class="tier-feature-item">Hand-coded High-Speed Architecture</li>
+              <li class="tier-feature-item">Contact & Lead Integration</li>
+              <li class="tier-feature-item">SEO Setup & Google Indexing</li>
+              <li class="tier-feature-item">Free Deployment & Hosting Setup</li>
+            </ul>
+            <div class="card-action-btn-styled btn-glow">Launch Website ✉️</div>
+            <span class="click-to-email-hint">Click Card to Email Direct</span>
+          </div>
+        </a>
 
-        <!-- Tier 3 -->
-        <div class="pricing-card-tier">
-          <h3 class="tier-name">Full Business Bundle</h3>
-          <p class="tier-subtext">Complete end-to-end web deployment paired with a full digital identity suite.</p>
-          <div class="tier-price-val">$550 <span>USD</span></div>
-          <span class="tier-cedi-converted mono">~GH₵6,400 Equivalent</span>
-          <ul class="tier-features-list">
-            <li class="tier-feature-item">Everything in Basic Branding Package</li>
-            <li class="tier-feature-item">Everything in Web Dev Package</li>
-            <li class="tier-feature-item">Complete Brand Style Guide</li>
-            <li class="tier-feature-item">Digital Interactive vCard Page</li>
-            <li class="tier-feature-item">30 Days Priority Technical Support</li>
-          </ul>
-          <button class="nav-action-btn mono" onclick="toggleDirectHub()" style="width:100%; text-align:center;">Get Full Package</button>
-        </div>
+        <!-- Tier 3 Card Link -->
+        <a href="mailto:ktakour.techsolutions2026@gmail.com?subject=Order%20Inquiry:%20Full%20Business%20Bundle%20($550)&body=Hello%20KTakour%20Tech%20Solutions,%0A%0AI%20would%20like%20to%20order/inquire%20about%20the%20Full%20Business%20Bundle%20($550).%20Please%20let%20me%20know%20the%20next%20steps.%0A%0AThank%20you!" class="pricing-card-link">
+          <div class="pricing-card-tier">
+            <h3 class="tier-name">Full Business Bundle</h3>
+            <p class="tier-subtext">Complete end-to-end web deployment paired with a full digital identity suite.</p>
+            <div class="tier-price-val">$550 <span>USD</span></div>
+            <span class="tier-cedi-converted mono">~GH₵6,400 Equivalent</span>
+            <ul class="tier-features-list">
+              <li class="tier-feature-item">Everything in Basic Branding Package</li>
+              <li class="tier-feature-item">Everything in Web Dev Package</li>
+              <li class="tier-feature-item">Complete Brand Style Guide</li>
+              <li class="tier-feature-item">Digital Interactive vCard Page</li>
+              <li class="tier-feature-item">30 Days Priority Technical Support</li>
+            </ul>
+            <div class="card-action-btn-styled nav-action-btn mono">Get Full Package ✉️</div>
+            <span class="click-to-email-hint">Click Card to Email Direct</span>
+          </div>
+        </a>
+
       </div>
     </div>
   </section>
 
   <!-- Floating Direct Action Hub -->
   <div class="direct-action-hub">
-    <div class="action-popover" id="direct-popover">
-      <h4 style="margin-bottom: 12px; color: var(--text-main);">Connect Directly</h4>
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">Reach out via your preferred network to lock in a project slot:</p>
-      <a href="https://wa.me/" target="_blank" class="popover-link-btn">
-        <span>💬</span> Chat on WhatsApp
-      </a>
-      <a href="mailto:contact@ktakour.tech" class="popover-link-btn">
-        <span>✉️</span> Direct Email Line
-      </a>
-    </div>
-
-    <button class="action-fab-btn" onclick="toggleDirectHub()" title="Open Direct Communication Hub">
-      ⚡
-    </button>
+    <a href="mailto:ktakour.techsolutions2026@gmail.com" class="action-fab-btn" title="Email KTakour Tech Solutions Directly">
+      ✉️
+    </a>
   </div>
 
   <!-- Footer -->
@@ -1113,6 +1125,7 @@
             </div>
           </div>
           <p style="color: var(--text-muted);">Open-minded digital solutions engineered to meet any technical or branding demand.</p>
+          <p style="color: var(--accent-cyan); margin-top: 12px; font-weight: 600;" class="mono">ktakour.techsolutions2026@gmail.com</p>
         </div>
         <div>
           <h4 style="color: var(--text-main); margin-bottom: 16px;">Quick Links</h4>
@@ -1135,12 +1148,6 @@
 
   <!-- Script Engine -->
   <script>
-    // Direct Hub Toggle
-    function toggleDirectHub() {
-      const popover = document.getElementById('direct-popover');
-      popover.classList.toggle('active');
-    }
-
     // Tab Handler
     function switchShowcaseTab(tabName) {
       document.querySelectorAll('.showcase-tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -1200,20 +1207,20 @@
     }
     renderTerminalCode();
 
-    // Particle Background System
+    // Enhanced Particle Canvas Background
     const pCanvas = document.getElementById('particle-canvas');
     const pCtx = pCanvas.getContext('2d');
     pCanvas.width = window.innerWidth;
     pCanvas.height = window.innerHeight;
 
     let particles = [];
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 65; i++) {
       particles.push({
         x: Math.random() * pCanvas.width,
         y: Math.random() * pCanvas.height,
         radius: Math.random() * 2 + 1,
-        dx: (Math.random() - 0.5) * 0.6,
-        dy: (Math.random() - 0.5) * 0.6
+        dx: (Math.random() - 0.5) * 0.8,
+        dy: (Math.random() - 0.5) * 0.8
       });
     }
 

@@ -153,6 +153,7 @@
     .text-gradient {
       background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-green) 50%, var(--accent-blue) 100%);
       background-size: 200% auto;
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: shimmer 6s linear infinite;
@@ -595,7 +596,7 @@
 
     .brand-header-flex { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; }
     .brand-title { font-size: 1.8rem; font-weight: 800; }
-    .brand-title span { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .brand-title span { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
     .price-badge {
       background: rgba(0, 242, 254, 0.1);
@@ -830,7 +831,7 @@
             <span class="hero-badge-dot"></span>
             <span class="mono">Open-Minded Engineering — Ready for Any Demand</span>
           </div>
-          <h1 class="hero-title">Adaptive Digital Systems & <span class="text-gradient">Brand Design</span></h1>
+          <h1 class="hero-title">Modern Web Architecture & <span class="text-gradient">Brand Design</span></h1>
           <p class="hero-subtitle">
             We engineer tailored, ultra-fast websites and complete digital identity packages with clean code, lightning speed, and maximum flexibility.
           </p>
@@ -1101,7 +1102,7 @@
         </div>
       </div>
 
-      <form action="https://formspree.io/f/xaewwalg" method="POST">
+      <form action="https://formspree.io/f/xaewwalg" method="POST" onsubmit="handleDualSubmit(event, 'https://script.google.com/macros/s/AKfycbwfuWbrMM4MlRUMK0dk6KkwfsYbkNFixf1-olnhonsh4psqTGoPSkpBWy9UDOXjZYiG/exec')">
         <input type="hidden" name="Package_Name" value="Basic Starter Package (1000 GHS)">
 
         <!-- Section 1: Business Identifiers -->
@@ -1262,7 +1263,7 @@
         </div>
       </div>
 
-      <form action="https://formspree.io/f/xnpaalyo" method="POST">
+      <form action="https://formspree.io/f/xnpaalyo" method="POST" onsubmit="handleDualSubmit(event, 'https://script.google.com/macros/s/AKfycbwfuWbrMM4MlRUMK0dk6KkwfsYbkNFixf1-olnhonsh4psqTGoPSkpBWy9UDOXjZYiG/exec')">
         <input type="hidden" name="Package_Name" value="Intermediate Pro Web Package (3000 GHS)">
 
         <!-- Section 1: Lead Details -->
@@ -1455,7 +1456,7 @@
         </div>
       </div>
 
-      <form action="https://formspree.io/f/mrpzzrwa" method="POST">
+      <form action="https://formspree.io/f/mrpzzrwa" method="POST" onsubmit="handleDualSubmit(event, 'https://script.google.com/macros/s/AKfycbwfuWbrMM4MlRUMK0dk6KkwfsYbkNFixf1-olnhonsh4psqTGoPSkpBWy9UDOXjZYiG/exec')">
         <input type="hidden" name="Package_Tier" value="Full Enterprise Custom Web Package (5000 GHS)">
 
         <!-- Section 1: Executive Information -->
@@ -1737,6 +1738,52 @@
       } else {
         box.classList.add('open');
         btn.innerHTML = 'Close Guide ✖';
+      }
+    }
+
+    /**
+     * Enhanced Dual Submission Handler
+     * Prevents default submit, waits for Google Apps Script AND Formspree fetch calls 
+     * to complete synchronously, then redirects to Formspree confirmation.
+     */
+    async function handleDualSubmit(event, googleScriptUrl) {
+      event.preventDefault(); // Stop standard form page reload
+
+      const form = event.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerText;
+
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Processing & Generating Invoice...";
+
+      const formData = new FormData(form);
+      const formspreeUrl = form.action;
+
+      try {
+        // Send to Google Apps Script and Formspree simultaneously
+        await Promise.allSettled([
+          fetch(googleScriptUrl, {
+            method: 'POST',
+            body: formData,
+            mode: 'no-cors'
+          }),
+          fetch(formspreeUrl, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': 'application/json'
+            }
+          })
+        ]);
+
+        // Submit form natively to show Formspree's success page
+        form.submit();
+      } catch (err) {
+        console.error('Error executing dual submit:', err);
+        form.submit();
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalText;
       }
     }
 

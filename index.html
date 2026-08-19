@@ -3,13 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KTakour Tech Solutions | High-Performance Web Engineering</title>
+  <title>KTakor Tech Solutions | High-Performance Web Engineering</title>
   <meta name="description" content="Custom web development, high-speed engineering, and digital brand design." />
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Paystack Inline JS SDK -->
+  <script src="https://js.paystack.co/v1/inline.js"></script>
 
   <style>
     :root {
@@ -24,7 +27,6 @@
       --accent-blue: #3b82f6;
       --accent-purple: #7928ca;
       --accent-gold: #f59e0b;
-      --accent-violet: #8b5cf6;
       
       --accent-glow-cyan: rgba(0, 242, 254, 0.35);
       --accent-glow-green: rgba(0, 255, 135, 0.35);
@@ -78,11 +80,10 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      z-index: 0;
       pointer-events: none;
     }
     #particle-canvas { z-index: 1; opacity: 0.7; }
-    #grid-canvas { z-index: 0; opacity: 0.3; }
+    #grid-canvas { z-index: 0; opacity: 0.2; }
 
     ::-webkit-scrollbar { width: 10px; }
     ::-webkit-scrollbar-track { background: var(--bg-primary); }
@@ -215,14 +216,14 @@
 
     .nav-menu {
       display: flex;
-      gap: 24px;
+      gap: 20px;
       list-style: none;
     }
 
     .nav-item-link {
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 600;
       cursor: pointer;
       position: relative;
@@ -230,7 +231,7 @@
       transition: var(--transition-fast);
     }
 
-    .nav-item-link:hover { color: var(--accent-cyan); }
+    .nav-item-link:hover, .nav-item-link.active-link { color: var(--accent-cyan); }
 
     .nav-action-btn {
       background: linear-gradient(135deg, rgba(0, 242, 254, 0.1), rgba(0, 255, 135, 0.1));
@@ -251,6 +252,17 @@
       color: var(--text-dark);
       box-shadow: 0 0 30px var(--accent-glow-cyan);
       transform: translateY(-2px);
+    }
+
+    .menu-toggle-btn {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 1.2rem;
+      cursor: pointer;
     }
 
     .hero {
@@ -305,7 +317,7 @@
       max-width: 620px;
     }
 
-    .hero-cta-group { display: flex; gap: 20px; }
+    .hero-cta-group { display: flex; gap: 20px; flex-wrap: wrap; }
 
     .btn-glow {
       background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
@@ -383,92 +395,6 @@
       min-height: 320px;
     }
 
-    .guide-banner-card {
-      background: linear-gradient(135deg, rgba(11, 15, 25, 0.95), rgba(17, 23, 38, 0.95));
-      border: 1px solid var(--accent-cyan);
-      border-radius: var(--radius-lg);
-      padding: 36px;
-      margin-bottom: 50px;
-      box-shadow: 0 20px 50px rgba(0, 242, 254, 0.15);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .guide-banner-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .guide-banner-text h3 {
-      font-size: 1.6rem;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .guide-banner-text p {
-      color: var(--text-muted);
-      font-size: 1rem;
-      max-width: 650px;
-    }
-
-    .guide-reader-container {
-      display: none;
-      margin-top: 30px;
-      padding-top: 30px;
-      border-top: 1px solid var(--border-subtle);
-    }
-
-    .guide-reader-container.open {
-      display: block;
-      animation: fadeInUp 0.4s ease-out forwards;
-    }
-
-    .doc-page {
-      background: rgba(8, 12, 20, 0.9);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 30px;
-      margin-bottom: 24px;
-    }
-
-    .doc-page-header {
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 12px;
-      margin-bottom: 20px;
-      font-size: 0.85rem;
-      color: var(--accent-cyan);
-    }
-
-    .doc-page-title {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: var(--text-main);
-      margin-bottom: 14px;
-    }
-
-    .doc-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 16px;
-      font-size: 0.88rem;
-    }
-
-    .doc-table th, .doc-table td {
-      border: 1px solid var(--border-subtle);
-      padding: 12px 14px;
-      text-align: left;
-    }
-
-    .doc-table th {
-      background: rgba(0, 242, 254, 0.1);
-      color: var(--accent-cyan);
-    }
-
     .pricing-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -542,6 +468,28 @@
       background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
       color: var(--text-dark);
       box-shadow: 0 0 25px var(--accent-glow-cyan);
+    }
+
+    /* Testimonials & Grid Styles */
+    .testimonial-grid, .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 30px;
+    }
+
+    .testimonial-card, .faq-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 28px;
+    }
+
+    .testimonial-author {
+      margin-top: 16px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      font-size: 0.9rem;
     }
 
     .form-wrapper {
@@ -664,20 +612,6 @@
       font-size: 0.9rem;
     }
 
-    .section-num-gold {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, var(--accent-gold), var(--accent-violet));
-      color: #ffffff;
-      font-family: var(--font-mono);
-      font-weight: 800;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.95rem;
-    }
-
     .section-title-text { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
 
     .form-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
@@ -708,48 +642,6 @@
 
     textarea { resize: vertical; min-height: 100px; }
 
-    .option-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 8px; }
-
-    .option-card-single {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 14px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
-    }
-
-    .option-card-single input { position: absolute; opacity: 0; }
-    .option-card-single:hover { border-color: var(--accent-cyan); background: rgba(0, 242, 254, 0.05); }
-
-    .option-card-single:has(input:checked) {
-      border-color: var(--accent-cyan);
-      background: rgba(0, 242, 254, 0.1);
-      box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
-    }
-
-    .option-content { font-size: 0.85rem; color: var(--text-muted); }
-
-    .checkbox-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 8px; }
-
-    .checkbox-label-styled {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--card-border);
-      padding: 12px 14px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.2s ease;
-    }
-
-    .checkbox-label-styled:hover { background: rgba(255, 255, 255, 0.07); border-color: var(--input-focus); }
-    .checkbox-label-styled input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent-cyan); }
-
     .submit-btn-glow {
       width: 100%;
       background: linear-gradient(135deg, var(--accent-cyan), var(--accent-green));
@@ -763,6 +655,10 @@
       cursor: pointer;
       box-shadow: 0 10px 30px rgba(0, 242, 254, 0.3);
       transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
 
     .submit-btn-glow:hover {
@@ -770,13 +666,102 @@
       box-shadow: 0 15px 40px rgba(0, 255, 135, 0.4);
     }
 
-    .submit-btn-gold {
-      background: linear-gradient(135deg, var(--accent-gold), var(--accent-violet));
-      color: #ffffff;
-      box-shadow: 0 10px 30px rgba(245, 158, 11, 0.35);
+    .form-footer-text { text-align: center; color: var(--text-muted); font-size: 0.82rem; margin-top: 20px; }
+
+    /* Payment & Legal Modal Overlays */
+    .payment-modal-overlay, .legal-modal-overlay, .doc-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(5, 7, 10, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
     }
 
-    .form-footer-text { text-align: center; color: var(--text-muted); font-size: 0.82rem; margin-top: 20px; }
+    .payment-modal-overlay.active, .legal-modal-overlay.active, .doc-modal-overlay.active {
+      display: flex;
+      animation: fadeInUp 0.3s ease-out forwards;
+    }
+
+    .payment-modal-card, .legal-modal-card, .doc-modal-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--accent-cyan);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      max-width: 650px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 242, 254, 0.25);
+      position: relative;
+    }
+
+    .doc-modal-card {
+      max-width: 900px;
+      border-color: var(--accent-green);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .modal-close-btn:hover { color: var(--text-main); }
+
+    .payment-summary-box {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+
+    .summary-row.total {
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 10px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--accent-green);
+    }
+
+    .footer-nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .footer-nav-links a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .footer-nav-links a:hover {
+      text-decoration: underline;
+    }
 
     footer {
       border-top: 1px solid var(--border-subtle);
@@ -789,11 +774,48 @@
       z-index: 2;
     }
 
+    .doc-page {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .doc-page-header {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+    }
+
+    .doc-subheading {
+      font-weight: 700;
+      color: var(--accent-green);
+      margin: 14px 0 6px 0;
+
+    }
+
     @media (max-width: 768px) {
-      .hero-grid, .pricing-grid, .form-grid-2, .option-cards-grid, .checkbox-list { grid-template-columns: 1fr; }
+      .hero-grid, .pricing-grid, .form-grid-2, .testimonial-grid, .faq-grid { grid-template-columns: 1fr; }
       .hero-title { font-size: 2.8rem; }
       .form-group.full-width { grid-column: span 1; }
-      .nav-menu { display: none; }
+      .menu-toggle-btn { display: block; }
+      .nav-menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 90px;
+        left: 0;
+        width: 100%;
+        background: rgba(5, 7, 10, 0.95);
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 20px;
+        gap: 16px;
+      }
+      .nav-menu.mobile-open { display: flex; }
     }
   </style>
 </head>
@@ -806,17 +828,22 @@
     <div class="container nav-container">
       <div class="logo-wrapper" onclick="switchView('landing-view')">
         <div style="display:flex; flex-direction:column;">
-          <span class="logo-brand-title">KTakour <span class="text-gradient">Tech</span></span>
+          <span class="logo-brand-title">KTakor <span class="text-gradient">Tech</span></span>
           <span class="logo-brand-subtitle">Solutions</span>
         </div>
         <span class="logo-tag mono">v2.6</span>
       </div>
 
-      <ul class="nav-menu">
-        <li><a onclick="switchView('landing-view')" class="nav-item-link">Home Showcase</a></li>
-        <li><a onclick="switchView('form-basic-view')" class="nav-item-link">1,000 GHS</a></li>
-        <li><a onclick="switchView('form-pro-view')" class="nav-item-link">3,000 GHS</a></li>
-        <li><a onclick="switchView('form-enterprise-view')" class="nav-item-link">5,000 GHS</a></li>
+      <button class="menu-toggle-btn" onclick="toggleMobileMenu()">☰</button>
+
+      <ul class="nav-menu" id="nav-menu-list">
+        <li><a onclick="switchView('landing-view')" class="nav-item-link active-link" id="nav-link-landing">Home Showcase</a></li>
+        <li><a onclick="scrollToSection('about-section')" class="nav-item-link">About Us</a></li>
+        <li><a onclick="openDocModal()" class="nav-item-link" style="color: var(--accent-green);">Package Guide Doc</a></li>
+        <li><a onclick="scrollToSection('faq-section')" class="nav-item-link">FAQs</a></li>
+        <li><a onclick="switchView('form-basic-view')" class="nav-item-link" id="nav-link-basic">1,000 GHS</a></li>
+        <li><a onclick="switchView('form-pro-view')" class="nav-item-link" id="nav-link-pro">3,000 GHS</a></li>
+        <li><a onclick="switchView('form-custom-view')" class="nav-item-link" id="nav-link-custom">200 GHS</a></li>
       </ul>
 
       <a href="mailto:ktakour.techsolutions2026@gmail.com?subject=Direct%20Inquiry" class="nav-action-btn mono">Email Direct</a>
@@ -833,10 +860,11 @@
           </div>
           <h1 class="hero-title">Modern Web Architecture & <span class="text-gradient">Brand Design</span></h1>
           <p class="hero-subtitle">
-            We engineer tailored, ultra-fast websites and complete digital identity packages with clean code, lightning speed, and maximum flexibility.
+            We engineer tailored, ultra-fast websites and complete digital identity packages with clean code, lightning speed, and continuous technical support.
           </p>
           <div class="hero-cta-group">
             <a href="#packages" class="btn-glow">Explore Packages ➔</a>
+            <button onclick="openDocModal()" class="btn-outline" style="border-color: var(--accent-green); color: var(--accent-green);">Read Service Guide Doc</button>
             <button onclick="switchView('form-basic-view')" class="btn-outline">Order Starter</button>
           </div>
         </div>
@@ -848,191 +876,34 @@
               <span class="terminal-dot-btn td-yellow"></span>
               <span class="terminal-dot-btn td-green"></span>
             </div>
-            <span class="terminal-filename mono">KTakour_Architecture.js</span>
+            <span class="terminal-filename mono">KTakor_Architecture.js</span>
           </div>
           <div class="terminal-code-body mono" id="typewriter-terminal"></div>
         </div>
       </div>
     </section>
 
+    <!-- ABOUT SECTION -->
+    <section id="about-section" class="section-padding" style="background: rgba(11, 15, 25, 0.5);">
+      <div class="container">
+        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+          <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 20px;" class="mono">About KTakor Tech Solutions</h2>
+          <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.8;">
+            KTakor Tech Solutions is a Ghanaian-based web development and digital brand design firm. We specialize in engineering ultra-responsive, modern websites and identity systems for businesses seeking high-speed performance and strong conversion.
+          </p>
+        </div>
+      </div>
+    </section>
+
     <section id="packages" class="section-padding">
       <div class="container">
-        
-        <div class="guide-banner-card">
-          <div class="guide-banner-header">
-            <div class="guide-banner-text">
-              <h3 class="text-gradient">Struggling to choose a package?</h3>
-              <p>Why don't you read our comprehensive 5-page Web Architecture & Branding Guide before making your selection?</p>
-            </div>
-            <button class="btn-glow" id="toggle-guide-btn" onclick="toggleGuideReader()">Read 5-Page Guide 📖</button>
-          </div>
-
-          <div class="guide-reader-container" id="guide-reader-box">
-            
-            <div class="doc-page">
-              <div class="doc-page-header mono">
-                <span>KTakour Tech Solutions — Guide Ref: KT-2026-GUIDE</span>
-                <span>PAGE 01 OF 05</span>
-              </div>
-              <h4 class="doc-page-title">01. Service Tier Packages & Core Pricing Architecture</h4>
-              <p style="color: var(--text-muted); margin-bottom: 16px;">
-                Selecting the correct technology tier is critical for matching your operational budget with your technical requirements. KTakour Tech Solutions structures all builds into three main engineering tiers:
-              </p>
-              <ul style="color: var(--text-muted); padding-left: 20px; line-height: 1.8;">
-                <li><strong>Basic Starter (1,000 GHS):</strong> Ideal for emerging businesses, startups, or simple product launches needing a fast online landing footprint and formal corporate branding documents.</li>
-                <li><strong>Intermediate Pro (3,000 GHS):</strong> Designed for established companies requiring dynamic multi-page user experiences, complete visual vector brand assets, and custom search engine visibility.</li>
-                <li><strong>Full Enterprise (5,000 GHS):</strong> Engineered for robust web systems, database integrations, SaaS prototypes, custom logic tools, payment gateways, and dedicated 30-day technical support.</li>
-              </ul>
-            </div>
-
-            <div class="doc-page">
-              <div class="doc-page-header mono">
-                <span>KTakour Tech Solutions — Guide Ref: KT-2026-GUIDE</span>
-                <span>PAGE 02 OF 05</span>
-              </div>
-              <h4 class="doc-page-title">02. Comprehensive Technical Matrix Comparison</h4>
-              <p style="color: var(--text-muted); margin-bottom: 16px;">
-                Review the technical scope breakdown across all three service levels to determine your precise technical requirement:
-              </p>
-              <table class="doc-table">
-                <thead>
-                  <tr>
-                    <th>Deliverable / Technical Feature</th>
-                    <th>Basic (1,000 GHS)</th>
-                    <th>Pro (3,000 GHS)</th>
-                    <th>Enterprise (5,000 GHS)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Digital Business Letterhead Suite</td>
-                    <td>Included (PDF/Word)</td>
-                    <td>Included (Vector Kit)</td>
-                    <td>Full Corporate Suite</td>
-                  </tr>
-                  <tr>
-                    <td>Website Architecture Scope</td>
-                    <td>1 Landing Page</td>
-                    <td>Up to 5 Pages</td>
-                    <td>Up to 5 Pages + Tools</td>
-                  </tr>
-                  <tr>
-                    <td>Intake Specification Depth</td>
-                    <td>Basic Intake</td>
-                    <td>Pro Intake</td>
-                    <td>Enterprise Intake</td>
-                  </tr>
-                  <tr>
-                    <td>Responsive Mobile/Desktop Engine</td>
-                    <td>✓ Enabled</td>
-                    <td>✓ Enabled</td>
-                    <td>✓ Enabled</td>
-                  </tr>
-                  <tr>
-                    <td>Direct Email Form Routing</td>
-                    <td>✓ Enabled</td>
-                    <td>✓ Enabled</td>
-                    <td>✓ Enabled</td>
-                  </tr>
-                  <tr>
-                    <td>Vector Logo & Full Brand Kit</td>
-                    <td>—</td>
-                    <td>✓ Enabled</td>
-                    <td>✓ Enabled</td>
-                  </tr>
-                  <tr>
-                    <td>Google Search Engine Optimization</td>
-                    <td>—</td>
-                    <td>✓ Enabled</td>
-                    <td>✓ Enabled</td>
-                  </tr>
-                  <tr>
-                    <td>Custom Interactive JS Tools / SaaS</td>
-                    <td>—</td>
-                    <td>—</td>
-                    <td>✓ Enabled</td>
-                  </tr>
-                  <tr>
-                    <td>Cloud Database Integration</td>
-                    <td>—</td>
-                    <td>—</td>
-                    <td>✓ Enabled</td>
-                  </tr>
-                  <tr>
-                    <td>Custom Domain & 30-Day Support</td>
-                    <td>—</td>
-                    <td>—</td>
-                    <td>✓ Enabled</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="doc-page">
-              <div class="doc-page-header mono">
-                <span>KTakour Tech Solutions — Guide Ref: KT-2026-GUIDE</span>
-                <span>PAGE 03 OF 05</span>
-              </div>
-              <h4 class="doc-page-title">03. Project Execution & Timeline Strategy</h4>
-              <p style="color: var(--text-muted); margin-bottom: 16px;">
-                Every project follows a rapid 3-stage agile deployment workflow to ensure maximum delivery speed with zero code quality compromise:
-              </p>
-              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px;">
-                <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 8px; border: 1px solid var(--border-subtle);">
-                  <strong class="mono" style="color: var(--accent-cyan);">STEP 01: Detailed Intake</strong>
-                  <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">Fill out the structured questionnaire. Requirements are logged and confirmed immediately.</p>
-                </div>
-                <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 8px; border: 1px solid var(--border-subtle);">
-                  <strong class="mono" style="color: var(--accent-green);">STEP 02: Design & Code</strong>
-                  <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">Assets and responsive web application code are engineered with active staging previews and updates.</p>
-                </div>
-                <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 8px; border: 1px solid var(--border-subtle);">
-                  <strong class="mono" style="color: var(--accent-gold);">STEP 03: Review & Launch</strong>
-                  <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">Final user testing is completed, custom domain DNS is linked, and your website is launched live to the world.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="doc-page">
-              <div class="doc-page-header mono">
-                <span>KTakour Tech Solutions — Guide Ref: KT-2026-GUIDE</span>
-                <span>PAGE 04 OF 05</span>
-              </div>
-              <h4 class="doc-page-title">04. Brand Identity & Vector Design Standards</h4>
-              <p style="color: var(--text-muted); margin-bottom: 14px;">
-                Branding is not just a visual layer; it is your business's visual trust foundation. Depending on your package, our visual asset delivery includes:
-              </p>
-              <ul style="color: var(--text-muted); padding-left: 20px; line-height: 1.8;">
-                <li><strong>Vector Scalability:</strong> SVG and EPS master files that remain razor-sharp at any size, from digital mobile headers to billboard print media.</li>
-                <li><strong>Color System Definition:</strong> Exact HEX, RGB, and CMYK color palettes customized for high-contrast dark-mode and light-mode environments.</li>
-                <li><strong>Typography Rules:</strong> Selection of clean, web-safe, and modern variable fonts optimized for quick reading and modern UI standards.</li>
-              </ul>
-            </div>
-
-            <div class="doc-page">
-              <div class="doc-page-header mono">
-                <span>KTakour Tech Solutions — Guide Ref: KT-2026-GUIDE</span>
-                <span>PAGE 05 OF 05</span>
-              </div>
-              <h4 class="doc-page-title">05. Support Lifecycle & Direct Technical Contact</h4>
-              <p style="color: var(--text-muted); margin-bottom: 14px;">
-                All builds include dedicated technical backing to guarantee post-launch stability. Enterprise packages include 30 days of active post-launch support covering minor content updates, server monitoring, and speed performance verification.
-              </p>
-              <div style="background: rgba(0, 242, 254, 0.05); border: 1px solid var(--accent-cyan); padding: 20px; border-radius: 12px; text-align: center; margin-top: 20px;">
-                <p class="mono" style="color: var(--accent-cyan); font-weight: 700;">Direct Technical Email Inquiries</p>
-                <p style="font-size: 1.1rem; font-weight: 800; margin-top: 4px;">ktakour.techsolutions2026@gmail.com</p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
         <div style="text-align: center; max-width: 700px; margin: 0 auto 40px auto;">
           <h2 style="font-size: 2.8rem; font-weight: 900;" class="mono">Select A Service Package</h2>
-          <p style="color: var(--text-muted);">Click on any card to launch the comprehensive intake questionnaire for that specific tier.</p>
+          <p style="color: var(--text-muted);">Choose an upfront development build or request custom task engineering.</p>
         </div>
 
         <div class="pricing-grid">
+          <!-- BASIC STARTER -->
           <div class="pricing-card-tier" onclick="switchView('form-basic-view')">
             <h3 class="tier-name">Basic Starter</h3>
             <p class="tier-subtext">Essential digital identity branding & single-page web setup for emerging businesses.</p>
@@ -1048,6 +919,7 @@
             <div class="card-action-btn-styled btn-outline">Launch Intake Form ➔</div>
           </div>
 
+          <!-- INTERMEDIATE PRO -->
           <div class="pricing-card-tier highlighted" onclick="switchView('form-pro-view')">
             <span class="tier-badge">Most Popular</span>
             <h3 class="tier-name">Intermediate Pro</h3>
@@ -1064,28 +936,75 @@
             <div class="card-action-btn-styled btn-glow">Launch Intake Form ➔</div>
           </div>
 
-          <div class="pricing-card-tier" onclick="switchView('form-enterprise-view')">
-            <h3 class="tier-name">Full Enterprise</h3>
-            <p class="tier-subtext">Full-stack web application, user portals, database integration, and payment gateways.</p>
-            <div class="tier-price-val">5,000 <span>GHS</span></div>
+          <!-- ONE-TIME TASK / FIX (200 GHS) -->
+          <div class="pricing-card-tier" style="border-color: var(--accent-gold);" onclick="switchView('form-custom-view')">
+            <h3 class="tier-name">One-Time Task Build</h3>
+            <p class="tier-subtext">Single standalone feature additions, website repairs, updates, or custom scripts.</p>
+            <div class="tier-price-val" style="color: var(--accent-gold);">200 <span>GHS</span></div>
             <ul class="tier-features-list">
-              <li class="tier-feature-item">Comprehensive Specification Intake</li>
-              <li class="tier-feature-item">Full Dynamic Web App / SaaS Custom Build</li>
-              <li class="tier-feature-item">User Registration, Login & Role Permissions</li>
-              <li class="tier-feature-item">Database Architecture & Admin Dashboard</li>
-              <li class="tier-feature-item">Paystack / Stripe Payment Processing</li>
-              <li class="tier-feature-item">Automated Email & SMS Client Notifications</li>
+              <li class="tier-feature-item">Custom Specific Task Scope</li>
+              <li class="tier-feature-item">Single Bug Fix, Feature Addition, or Edit</li>
+              <li class="tier-feature-item">Quick Turnaround Execution</li>
+              <li class="tier-feature-item">Code Optimization & Integration</li>
+              <li class="tier-feature-item">Direct Formspree Task Submission</li>
+              <li class="tier-feature-item">Paystack Instant Payment Trigger</li>
             </ul>
-            <div class="card-action-btn-styled btn-outline">Launch Intake Form ➔</div>
+            <div class="card-action-btn-styled btn-outline" style="border-color: var(--accent-gold); color: var(--accent-gold);">Submit Task Form ➔</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CUSTOMER FEEDBACK SECTION -->
+    <section class="section-padding" style="background: rgba(11, 15, 25, 0.5);">
+      <div class="container">
+        <div style="text-align: center; max-width: 700px; margin: 0 auto 20px auto;">
+          <h2 style="font-size: 2.5rem; font-weight: 900;" class="mono">Customer Feedback</h2>
+          <p style="color: var(--text-muted);">What our clients say about working with KTakor Tech Solutions.</p>
+        </div>
+        <div class="testimonial-grid">
+          <div class="testimonial-card">
+            <p style="color: var(--text-muted); font-style: italic;">"The speed of delivery and code quality exceeded our expectations. Our new website loaded three times faster than our old build."</p>
+            <div class="testimonial-author">— Kwesi A., Venture Founder</div>
+          </div>
+          <div class="testimonial-card">
+            <p style="color: var(--text-muted); font-style: italic;">"KTakor Tech Solutions built our brand kit and landing page in under 72 hours. Excellent communication throughout."</p>
+            <div class="testimonial-author">— Ama M., Business Director</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faq-section" class="section-padding">
+      <div class="container">
+        <div style="text-align: center; max-width: 700px; margin: 0 auto 20px auto;">
+          <h2 style="font-size: 2.5rem; font-weight: 900;" class="mono">Frequently Asked Questions</h2>
+          <p style="color: var(--text-muted);">Common questions regarding our web development services.</p>
+        </div>
+        <div class="faq-grid">
+          <div class="faq-card">
+            <h4 style="color: var(--accent-cyan); font-size: 1.1rem; margin-bottom: 10px;">How long does project delivery take?</h4>
+            <p style="color: var(--text-muted);">Basic Starter packages are delivered in 48 to 72 hours. Intermediate Pro projects take between 1 and 2 weeks depending on custom features.</p>
+          </div>
+          <div class="faq-card">
+            <h4 style="color: var(--accent-cyan); font-size: 1.1rem; margin-bottom: 10px;">How are payments processed?</h4>
+            <p style="color: var(--text-muted);">All online payments are securely processed through Paystack using Mobile Money, Card, or direct transfers in Ghanaian Cedis (GHS).</p>
+          </div>
+          <div class="faq-card">
+            <h4 style="color: var(--accent-cyan); font-size: 1.1rem; margin-bottom: 10px;">Can I request custom adjustments after delivery?</h4>
+            <p style="color: var(--text-muted);">Yes, all project tiers include post-launch support and minor adjustments within the scope specified in the initial intake form.</p>
+          </div>
+          <div class="faq-card">
+            <h4 style="color: var(--accent-cyan); font-size: 1.1rem; margin-bottom: 10px;">What is required from me to start?</h4>
+            <p style="color: var(--text-muted);">You simply need to fill out our interactive intake form for your chosen package with your branding preferences and text content.</p>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- ==========================================================================
-       VIEW 2: BASIC STARTER FORM (1,000 GHS)
-       ========================================================================== -->
+  <!-- BASIC STARTER FORM (1,000 GHS) -->
   <main id="form-basic-view" class="view-section">
     <div class="form-wrapper">
       <div class="back-btn-bar">
@@ -1095,17 +1014,16 @@
       <div class="brand-card">
         <div class="brand-header-flex">
           <div>
-            <div class="brand-title">KTakour <span>Tech</span> Solutions</div>
+            <div class="brand-title">KTakor <span>Tech</span> Solutions</div>
             <p style="color: var(--text-muted); font-size:0.95rem;">Basic Starter Package — Comprehensive Intake</p>
           </div>
           <div class="price-badge">1,000 GHS TIER</div>
         </div>
       </div>
 
-      <form action="https://formspree.io/f/xaewwalg" method="POST" onsubmit="handleDualSubmit(event, 'https://script.google.com/macros/s/AKfycbwfuWbrMM4MlRUMK0dk6KkwfsYbkNFixf1-olnhonsh4psqTGoPSkpBWy9UDOXjZYiG/exec')">
+      <form id="basic-form" action="https://formspree.io/f/xaewwalg" method="POST" onsubmit="handleProceedToPayment(event, 'Basic Starter Package', 1000)">
         <input type="hidden" name="Package_Name" value="Basic Starter Package (1000 GHS)">
 
-        <!-- Section 1: Business Identifiers -->
         <div class="form-card">
           <div class="section-header">
             <div class="section-num">01</div>
@@ -1118,7 +1036,7 @@
             </div>
             <div class="form-group">
               <label for="b_q2">Official Business Name <span class="req">*</span></label>
-              <input type="text" id="b_q2" name="Q02_Business_Name" required placeholder="e.g. KTakour Ventures Ltd.">
+              <input type="text" id="b_q2" name="Q02_Business_Name" required placeholder="e.g. KTakor Ventures Ltd.">
             </div>
             <div class="form-group">
               <label for="b_q3">Primary Email Address <span class="req">*</span></label>
@@ -1135,7 +1053,6 @@
           </div>
         </div>
 
-        <!-- Section 2: Brand Identity & Aesthetics -->
         <div class="form-card">
           <div class="section-header">
             <div class="section-num">02</div>
@@ -1174,7 +1091,6 @@
           </div>
         </div>
 
-        <!-- Section 3: Single-Page Web Content -->
         <div class="form-card">
           <div class="section-header">
             <div class="section-num">03</div>
@@ -1202,7 +1118,6 @@
           </div>
         </div>
 
-        <!-- Section 4: Digital Letterhead & Operations -->
         <div class="form-card">
           <div class="section-header">
             <div class="section-num">04</div>
@@ -1237,16 +1152,14 @@
         </div>
 
         <div class="submit-container">
-          <button type="submit" class="submit-btn-glow">Submit Basic Intake ➔</button>
+          <button type="submit" class="submit-btn-glow">Proceed to Payment (1,000 GHS) ➔</button>
           <p class="form-footer-text">Direct Support: <strong>ktakour.techsolutions2026@gmail.com</strong></p>
         </div>
       </form>
     </div>
   </main>
 
-  <!-- ==========================================================================
-       VIEW 3: INTERMEDIATE PRO FORM (3,000 GHS)
-       ========================================================================== -->
+  <!-- INTERMEDIATE PRO FORM (3,000 GHS) -->
   <main id="form-pro-view" class="view-section">
     <div class="form-wrapper">
       <div class="back-btn-bar">
@@ -1256,17 +1169,16 @@
       <div class="brand-card">
         <div class="brand-header-flex">
           <div>
-            <div class="brand-title">KTakour <span>Tech</span> Solutions</div>
+            <div class="brand-title">KTakor <span>Tech</span> Solutions</div>
             <p style="color: var(--text-muted); font-size:0.95rem;">Intermediate Pro Package — Comprehensive Intake</p>
           </div>
           <div class="price-badge-blue">3,000 GHS TIER</div>
         </div>
       </div>
 
-      <form action="https://formspree.io/f/xnpaalyo" method="POST" onsubmit="handleDualSubmit(event, 'https://script.google.com/macros/s/AKfycbwfuWbrMM4MlRUMK0dk6KkwfsYbkNFixf1-olnhonsh4psqTGoPSkpBWy9UDOXjZYiG/exec')">
+      <form id="pro-form" action="https://formspree.io/f/xnpaalyo" method="POST" onsubmit="handleProceedToPayment(event, 'Intermediate Pro Package', 3000)">
         <input type="hidden" name="Package_Name" value="Intermediate Pro Web Package (3000 GHS)">
 
-        <!-- Section 1: Lead Details -->
         <div class="form-card">
           <div class="section-header">
             <div class="section-num">01</div>
@@ -1296,7 +1208,6 @@
           </div>
         </div>
 
-        <!-- Section 2: Architecture -->
         <div class="form-card">
           <div class="section-header">
             <div class="section-num">02</div>
@@ -1328,7 +1239,6 @@
           </div>
         </div>
 
-        <!-- Section 3: Vector Brand Kit -->
         <div class="form-card">
           <div class="section-header">
             <div class="section-num">03</div>
@@ -1362,7 +1272,6 @@
           </div>
         </div>
 
-        <!-- Section 4: Google SEO -->
         <div class="form-card">
           <div class="section-header">
             <div class="section-num">04</div>
@@ -1395,7 +1304,6 @@
           </div>
         </div>
 
-        <!-- Section 5: Hand-Off & Technical -->
         <div class="form-card">
           <div class="section-header">
             <div class="section-num">05</div>
@@ -1430,17 +1338,15 @@
         </div>
 
         <div class="submit-container">
-          <button type="submit" class="submit-btn-glow">Submit Pro Intake ➔</button>
+          <button type="submit" class="submit-btn-glow">Proceed to Payment (3,000 GHS) ➔</button>
           <p class="form-footer-text">Direct Support: <strong>ktakour.techsolutions2026@gmail.com</strong></p>
         </div>
       </form>
     </div>
   </main>
 
-  <!-- ==========================================================================
-       VIEW 4: FULL ENTERPRISE FORM (5,000 GHS)
-       ========================================================================== -->
-  <main id="form-enterprise-view" class="view-section">
+  <!-- ONE-TIME TASK BUILD FORM (200 GHS) -->
+  <main id="form-custom-view" class="view-section">
     <div class="form-wrapper">
       <div class="back-btn-bar">
         <button class="back-btn" onclick="switchView('landing-view')">← Back to Overview</button>
@@ -1449,275 +1355,227 @@
       <div class="brand-card">
         <div class="brand-header-flex">
           <div>
-            <div class="brand-title">KTakour <span>Tech</span> Solutions</div>
-            <p style="color: var(--text-muted); font-size:0.98rem;">Full Enterprise Package — Architecture Specification Intake</p>
+            <div class="brand-title">KTakor <span>Tech</span> Solutions</div>
+            <p style="color: var(--text-muted); font-size:0.95rem;">One-Time Task Build — Custom Engineering & Fixes</p>
           </div>
-          <div class="price-badge-gold">5,000 GHS TIER</div>
+          <div class="price-badge-gold">200 GHS TIER</div>
         </div>
       </div>
 
-      <form action="https://formspree.io/f/mrpzzrwa" method="POST" onsubmit="handleDualSubmit(event, 'https://script.google.com/macros/s/AKfycbwfuWbrMM4MlRUMK0dk6KkwfsYbkNFixf1-olnhonsh4psqTGoPSkpBWy9UDOXjZYiG/exec')">
-        <input type="hidden" name="Package_Tier" value="Full Enterprise Custom Web Package (5000 GHS)">
+      <form id="custom-form" action="https://formspree.io/f/mrpzzrwa" method="POST" onsubmit="handleProceedToPayment(event, 'One-Time Task Build', 200)">
+        <input type="hidden" name="Package_Name" value="One-Time Task Build (200 GHS)">
 
-        <!-- Section 1: Executive Information -->
         <div class="form-card">
           <div class="section-header">
-            <div class="section-num-gold">01</div>
-            <div class="section-title-text">Executive Contact & Enterprise Information</div>
+            <div class="section-num">01</div>
+            <div class="section-title-text">Contact Information</div>
           </div>
           <div class="form-grid-2">
             <div class="form-group">
-              <label for="e_q1">Executive Sponsor Full Name <span class="req">*</span></label>
-              <input type="text" id="e_q1" name="Q01_Executive_Sponsor_Name" required placeholder="e.g. Dr. Kwame Mensah">
+              <label for="c_q1">Your Name <span class="req">*</span></label>
+              <input type="text" id="c_q1" name="Q01_Name" required placeholder="e.g. Kojo Addo">
             </div>
             <div class="form-group">
-              <label for="e_q2">Legal Registered Corporate Entity <span class="req">*</span></label>
-              <input type="text" id="e_q2" name="Q02_Corporate_Entity" required placeholder="e.g. Nexus Tech Systems Enterprise">
-            </div>
-            <div class="form-group">
-              <label for="e_q3">Stakeholder Official Email <span class="req">*</span></label>
-              <input type="email" id="e_q3" name="Q03_Stakeholder_Email" required placeholder="exec@nexustech.com">
-            </div>
-            <div class="form-group">
-              <label for="e_q4">Executive Phone / WhatsApp Line <span class="req">*</span></label>
-              <input type="tel" id="e_q4" name="Q04_Executive_Phone" required placeholder="+233 xx xxx xxxx">
+              <label for="c_q2">Email Address <span class="req">*</span></label>
+              <input type="email" id="c_q2" name="Q03_Email" required placeholder="kojo@example.com">
             </div>
             <div class="form-group full-width">
-              <label for="e_q5">Country of Registration & Tax ID <span class="req">*</span></label>
-              <input type="text" id="e_q5" name="Q05_Tax_ID_Country" required placeholder="e.g. Ghana / TIN-99887766">
+              <label for="c_q3">Phone / WhatsApp Line <span class="req">*</span></label>
+              <input type="tel" id="c_q3" name="Q04_Phone" required placeholder="+233 xx xxx xxxx">
             </div>
           </div>
         </div>
 
-        <!-- Section 2: Platform Scope & User Flows -->
         <div class="form-card">
           <div class="section-header">
-            <div class="section-num-gold">02</div>
-            <div class="section-title-text">Platform Scope & User Architecture</div>
+            <div class="section-num">02</div>
+            <div class="section-title-text">Task Specification & Details</div>
           </div>
           <div class="form-group">
-            <label for="e_q6">Primary Enterprise Platform Category <span class="req">*</span></label>
-            <select id="e_q6" name="Q06_Platform_Category" required>
-              <option value="Custom SaaS / Cloud Application">Custom SaaS / Cloud Application</option>
-              <option value="E-Commerce & Digital Marketplace">E-Commerce & Digital Marketplace</option>
-              <option value="Corporate Enterprise Portal & Dashboard">Corporate Enterprise Portal & Dashboard</option>
-              <option value="Custom Web Calculator / Interactive Tool Engine">Custom Web Calculator / Interactive Tool Engine</option>
-            </select>
+            <label for="c_q4">Task / Feature Title <span class="req">*</span></label>
+            <input type="text" id="c_q4" name="Q05_Task_Title" required placeholder="e.g. Fix Navigation Menu Bug or Add Paystack Integration">
           </div>
           <div class="form-group">
-            <label for="e_q7">Complete List of Web App Views / Pages <span class="req">*</span></label>
-            <textarea id="e_q7" name="Q07_App_Views_List" required placeholder="e.g. Landing Page, User Dashboard, Admin Control Panel, Analytics View, Checkout"></textarea>
+            <label for="c_q5">Detailed Description of Required Task <span class="req">*</span></label>
+            <textarea id="c_q5" name="Q06_Task_Description" required placeholder="Explain what you need built, fixed, or modified in detail..."></textarea>
           </div>
           <div class="form-group">
-            <label for="e_q8">Step-by-Step Core User Flow Narrative <span class="req">*</span></label>
-            <textarea id="e_q8" name="Q08_User_Flow_Narrative" required placeholder="1. Visitor registers account -> 2. Selects plan -> 3. Completes payment -> 4. Gains portal access"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="e_q9">User Roles Required (e.g. Admin, Customer, Manager) <span class="req">*</span></label>
-            <input type="text" id="e_q9" name="Q09_User_Roles" required placeholder="e.g. Super Admin, Staff Manager, Client User">
-          </div>
-          <div class="form-group">
-            <label for="e_q10">Expected Launch Concurrent User Capacity <span class="req">*</span></label>
-            <input type="number" id="e_q10" name="Q10_Concurrent_Users" required placeholder="e.g. 1000">
-          </div>
-        </div>
-
-        <!-- Section 3: Authentication & Security -->
-        <div class="form-card">
-          <div class="section-header">
-            <div class="section-num-gold">03</div>
-            <div class="section-title-text">Authentication, Security & Roles</div>
-          </div>
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label for="e_q11">Authentication Protocol Preference <span class="req">*</span></label>
-              <select id="e_q11" name="Q11_Auth_Protocol" required>
-                <option value="Email + Password standard login">Email + Password standard login</option>
-                <option value="OAuth (Google, GitHub, Apple Social Login)">OAuth (Google, GitHub, Apple Social Login)</option>
-                <option value="Passwordless Magic Email Links">Passwordless Magic Email Links</option>
-                <option value="Multi-Factor Authentication (MFA / 2FA)">Multi-Factor Authentication (MFA / 2FA)</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="e_q12">Regulatory Compliance Requirements <span class="req">*</span></label>
-              <input type="text" id="e_q12" name="Q12_Compliance_Standards" required placeholder="e.g. GDPR, Ghana Data Protection Act">
-            </div>
-            <div class="form-group">
-              <label for="e_q13">Role-Based Permission Structure (RBAC) <span class="req">*</span></label>
-              <input type="text" id="e_q13" name="Q13_RBAC_Structure" required placeholder="e.g. Read-Only Users, Edit Permissions, Super Admins">
-            </div>
-            <div class="form-group">
-              <label for="e_q14">Data Encryption & SSL Requirements <span class="req">*</span></label>
-              <input type="text" id="e_q14" name="Q14_Encryption_Requirements" required placeholder="e.g. TLS 1.3, AES-256 DB Encryption">
-            </div>
-            <div class="form-group full-width">
-              <label for="e_q15">Custom User Profile Data Requirements</label>
-              <textarea id="e_q15" name="Q15_Custom_Profile_Fields" placeholder="List custom fields required for user profiles (e.g. Phone, Company Name, Address, Billing Info)..."></textarea>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section 4: Data Layer & Integrations -->
-        <div class="form-card">
-          <div class="section-header">
-            <div class="section-num-gold">04</div>
-            <div class="section-title-text">Data Layer, Databases & External APIs</div>
-          </div>
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label for="e_q16">Preferred Database Architecture <span class="req">*</span></label>
-              <select id="e_q16" name="Q16_Database_Choice" required>
-                <option value="PostgreSQL Relational DB (Supabase / Neon)">PostgreSQL Relational DB (Supabase / Neon)</option>
-                <option value="MongoDB NoSQL Document Store">MongoDB NoSQL Document Store</option>
-                <option value="Firebase Realtime Database">Firebase Realtime Database</option>
-                <option value="SQLite Local Embedded DB">SQLite Local Embedded DB</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="e_q17">External APIs to Integrate <span class="req">*</span></label>
-              <input type="text" id="e_q17" name="Q17_External_APIs" required placeholder="e.g. OpenAI API, Google Maps API, Twilio SMS">
-            </div>
-            <div class="form-group">
-              <label for="e_q18">Webhook & Real-Time Event Requirements</label>
-              <input type="text" id="e_q18" name="Q18_Webhook_Events" placeholder="e.g. Payment status webhooks, User signup alerts">
-            </div>
-            <div class="form-group">
-              <label for="e_q19">Cloud File Storage Storage Provider <span class="req">*</span></label>
-              <input type="text" id="e_q19" name="Q19_Cloud_Storage" required placeholder="e.g. AWS S3, Cloudinary, Supabase Storage">
-            </div>
-            <div class="form-group full-width">
-              <label for="e_q20">Automated Email & SMS Service Provider <span class="req">*</span></label>
-              <input type="text" id="e_q20" name="Q20_Email_SMS_Provider" required placeholder="e.g. SendGrid, Resend, Twilio, Hubtel">
-            </div>
-          </div>
-        </div>
-
-        <!-- Section 5: Payment Gateways & Financial Logic -->
-        <div class="form-card">
-          <div class="section-header">
-            <div class="section-num-gold">05</div>
-            <div class="section-title-text">Payment Gateways & Financial Logic</div>
-          </div>
-          <div class="form-group">
-            <label>Local & Regional Payment Gateways <span class="req">*</span></label>
-            <div class="checkbox-list">
-              <label class="checkbox-label-styled">
-                <input type="checkbox" name="Q21_Gateways[]" value="Paystack (MoMo & Cards)" checked> Paystack (Mobile Money & Visa/Mastercard)
-              </label>
-              <label class="checkbox-label-styled">
-                <input type="checkbox" name="Q21_Gateways[]" value="Flutterwave" checked> Flutterwave West Africa
-              </label>
-              <label class="checkbox-label-styled">
-                <input type="checkbox" name="Q21_Gateways[]" value="Hubtel MoMo API"> Hubtel MoMo Gateway
-              </label>
-            </div>
-          </div>
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label for="e_q22">International Gateways (Stripe/PayPal)</label>
-              <input type="text" id="e_q22" name="Q22_International_Gateways" placeholder="e.g. Stripe USD Integration">
-            </div>
-            <div class="form-group">
-              <label for="e_q23">Operating Currency Requirements <span class="req">*</span></label>
-              <input type="text" id="e_q23" name="Q23_Currencies" required placeholder="e.g. GHS primary, USD secondary">
-            </div>
-            <div class="form-group">
-              <label for="e_q24">Recurring Subscription Billing Needed? <span class="req">*</span></label>
-              <select id="e_q24" name="Q24_Recurring_Billing" required>
-                <option value="Yes - Monthly / Annual Subscription Engine">Yes - Monthly / Annual Subscription Engine</option>
-                <option value="No - One-time transactions only">No - One-time transactions only</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="e_q25">Multi-Vendor Payout / Split Revenue Logic</label>
-              <input type="text" id="e_q25" name="Q25_Vendor_Payout_Logic" placeholder="Describe commission or split payment rules...">
-            </div>
-          </div>
-        </div>
-
-        <!-- Section 6: Interactive Web Tools & SaaS Features -->
-        <div class="form-card">
-          <div class="section-header">
-            <div class="section-num-gold">06</div>
-            <div class="section-title-text">Interactive JavaScript Tools & SaaS Specs</div>
-          </div>
-          <div class="form-grid-2">
-            <div class="form-group full-width">
-              <label for="e_q26">Custom Interactive Web Tool / Calculator Specifications <span class="req">*</span></label>
-              <textarea id="e_q26" name="Q26_Interactive_Tool_Specs" required placeholder="Explain the custom math/logic calculator or interactive widget needed..."></textarea>
-            </div>
-            <div class="form-group">
-              <label for="e_q27">Reporting & Analytics Metrics Required <span class="req">*</span></label>
-              <input type="text" id="e_q27" name="Q27_Analytics_Metrics" required placeholder="e.g. Daily revenue, active user counts, conversion rates">
-            </div>
-            <div class="form-group">
-              <label for="e_q28">Report Export Options (PDF / CSV / Excel) <span class="req">*</span></label>
-              <input type="text" id="e_q28" name="Q28_Export_Formats" required placeholder="e.g. Automated PDF Invoice Generation & CSV export">
-            </div>
-            <div class="form-group">
-              <label for="e_q29">Automated Invoicing System Setup Needed? <span class="req">*</span></label>
-              <select id="e_q29" name="Q29_Automated_Invoicing" required>
-                <option value="Yes - Auto-generate PDF invoices on checkout">Yes - Auto-generate PDF invoices on checkout</option>
-                <option value="No - Manual invoice issuing">No - Manual invoice issuing</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="e_q30">Audit Logging & Activity Tracking Requirements</label>
-              <input type="text" id="e_q30" name="Q30_Audit_Logging" placeholder="e.g. Log all admin changes and user logins">
-            </div>
-          </div>
-        </div>
-
-        <!-- Section 7: Deployment & Support -->
-        <div class="form-card">
-          <div class="section-header">
-            <div class="section-num-gold">07</div>
-            <div class="section-title-text">Hosting Infrastructure & 30-Day Support</div>
-          </div>
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label for="e_q31">Cloud Infrastructure Hosting Preference <span class="req">*</span></label>
-              <select id="e_q31" name="Q31_Cloud_Hosting" required>
-                <option value="Vercel / AWS High-Performance Edge">Vercel / AWS High-Performance Edge</option>
-                <option value="DigitalOcean Cloud VPS">DigitalOcean Cloud VPS</option>
-                <option value="Self-Hosted / Existing Corporate Server">Self-Hosted / Existing Corporate Server</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="e_q32">Domain Name & DNS Management Status <span class="req">*</span></label>
-              <input type="text" id="e_q32" name="Q32_DNS_Management" required placeholder="e.g. Domain registered, DNS ready for configuration">
-            </div>
-            <div class="form-group">
-              <label for="e_q33">Brand Assets Drive URL (Logos, UI Kits) <span class="req">*</span></label>
-              <input type="url" id="e_q33" name="Q33_Enterprise_Drive_Link" required placeholder="https://drive.google.com/drive/folders/...">
-            </div>
-            <div class="form-group">
-              <label for="e_q34">Designated 30-Day Post-Launch Support Lead <span class="req">*</span></label>
-              <input type="text" id="e_q34" name="Q34_Support_Lead_Contact" required placeholder="e.g. Lead Developer / CTO Contact">
-            </div>
-            <div class="form-group full-width">
-              <label for="e_q35">Final Deliverable Acceptance Criteria & Milestone Sign-off <span class="req">*</span></label>
-              <textarea id="e_q35" name="Q35_Acceptance_Criteria" required placeholder="State exact technical requirements that define completed sign-off..."></textarea>
-            </div>
+            <label for="c_q6">Target Website URL / Repository Link (if applicable)</label>
+            <input type="url" id="c_q6" name="Q07_Website_URL" placeholder="https://yourwebsite.com">
           </div>
         </div>
 
         <div class="submit-container">
-          <button type="submit" class="submit-btn-glow submit-btn-gold">Submit Enterprise Intake ➔</button>
+          <button type="submit" class="submit-btn-glow" style="background: linear-gradient(135deg, var(--accent-gold), var(--accent-green));">Proceed to Payment (200 GHS) ➔</button>
           <p class="form-footer-text">Direct Support: <strong>ktakour.techsolutions2026@gmail.com</strong></p>
         </div>
       </form>
     </div>
   </main>
 
+  <!-- PAYMENT INTERFACE OVERLAY MODAL -->
+  <div id="payment-modal" class="payment-modal-overlay">
+    <div class="payment-modal-card">
+      <button class="modal-close-btn" onclick="closePaymentModal()">&times;</button>
+      
+      <div style="text-align: center; margin-bottom: 20px;">
+        <h3 style="font-size: 1.5rem; font-weight: 800;" class="mono">Checkout & Payment</h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem;">Secure Payment via Paystack</p>
+      </div>
+
+      <div class="payment-summary-box">
+        <div class="summary-row">
+          <span>Package/Service:</span>
+          <strong id="modal-package-name">Basic Starter Package</strong>
+        </div>
+        <div class="summary-row">
+          <span>Client Email:</span>
+          <strong id="modal-client-email">email@domain.com</strong>
+        </div>
+        <div class="summary-row total">
+          <span>Total Payable:</span>
+          <span id="modal-total-amount">1,000 GHS</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <button id="paystack-trigger-btn" onclick="executePaystackPayment()" class="submit-btn-glow">
+          <span>Pay Now via Paystack</span> ➔
+        </button>
+        <button onclick="closePaymentModal()" class="btn-outline" style="text-align: center; justify-content: center;">
+          Cancel
+        </button>
+      </div>
+
+      <p style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 16px;">
+        🔒 Encrypted & Processed via Paystack Gateway
+      </p>
+    </div>
+  </div>
+
+  <!-- LEGAL MODAL OVERLAY -->
+  <div id="legal-modal" class="legal-modal-overlay">
+    <div class="legal-modal-card">
+      <button class="modal-close-btn" onclick="closeLegalModal()">&times;</button>
+      <h3 id="legal-modal-title" style="font-size: 1.5rem; font-weight: 800; margin-bottom: 15px;" class="mono"></h3>
+      <div id="legal-modal-content" style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.7;"></div>
+    </div>
+  </div>
+
+  <!-- COMPREHENSIVE 5-PAGE SERVICE DOCUMENTATION MODAL -->
+  <div id="doc-modal" class="doc-modal-overlay">
+    <div class="doc-modal-card">
+      <button class="modal-close-btn" onclick="closeDocModal()">&times;</button>
+      
+      <div style="text-align: center; margin-bottom: 24px;">
+        <h2 style="font-size: 2rem; font-weight: 900;" class="mono">KTakor Tech Solutions</h2>
+        <p style="color: var(--accent-green); font-weight: 700; font-size: 0.95rem;">Comprehensive Service Architecture & Package Specification Guide</p>
+      </div>
+
+      <!-- PAGE 1 -->
+      <div class="doc-page">
+        <div class="doc-page-header">PAGE 1: Executive Overview & Architectural Philosophy</div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px;">
+          KTakor Tech Solutions provides custom software engineering, high-performance web architecture, and digital identity branding. Every application built by KTakor is engineered with vanilla performance, minimal bundle overhead, and optimal conversion paths.
+        </p>
+        <div class="doc-subheading">1. Core Technical Standards</div>
+        <ul style="color: var(--text-muted); font-size: 0.88rem; padding-left: 20px; line-height: 1.7;">
+          <li>Zero-Dependency or Clean Vanilla JavaScript execution pipelines.</li>
+          <li>Sub-second DOM render speeds across Mobile and Desktop displays.</li>
+          <li>Full Glassmorphism & High-Contrast Cyber-Tech visual interfaces.</li>
+          <li>Dual-destination intake processing (Google Sheets Database + Formspree Email Notifications).</li>
+          <li>Integrated Paystack Financial Gateway natively in Ghanaian Cedis (GHS).</li>
+        </ul>
+      </div>
+
+      <!-- PAGE 2 -->
+      <div class="doc-page">
+        <div class="doc-page-header">PAGE 2: Package 1 — Basic Starter Tier (1,000 GHS)</div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px;">
+          Designed for early-stage ventures, startups, and professionals seeking a rapid digital deployment and formal business correspondence suite within 48 to 72 hours[cite: 8].
+        </p>
+        <div class="doc-subheading">Included Deliverables:</div>
+        <ul style="color: var(--text-muted); font-size: 0.88rem; padding-left: 20px; line-height: 1.7;">
+          <li><strong>Single-Page Ultra-Fast Landing Website:</strong> Complete responsive layout featuring Hero, About Us, Services Showcase, Contact Form, and Footer.</li>
+          <li><strong>Digital Letterhead Suite:</strong> Delivered in both editable Microsoft Word (.docx) and high-resolution Vector PDF format containing business registration metadata, address, and branded header/footer framing.</li>
+          <li><strong>Formspree Contact Pipeline:</strong> Real-time delivery of website inquiries directly to the client's email address.</li>
+          <li><strong>48–72 Hour Execution Guarantee:</strong> Direct deployment within 3 business days following intake submission[cite: 8].</li>
+        </ul>
+      </div>
+
+      <!-- PAGE 3 -->
+      <div class="doc-page">
+        <div class="doc-page-header">PAGE 3: Package 2 — Intermediate Pro Tier (3,000 GHS)</div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px;">
+          The flagship multi-page web solution built for growing enterprises requiring custom brand identities, interactive WebGL/Canvas UI components, and search engine dominance[cite: 8].
+        </p>
+        <div class="doc-subheading">Included Deliverables:</div>
+        <ul style="color: var(--text-muted); font-size: 0.88rem; padding-left: 20px; line-height: 1.7;">
+          <li><strong>Up to 5 Multi-Page Web Architecture:</strong> Home, About, Services/Products, Portfolio/Case Studies, and Contact Pages.</li>
+          <li><strong>Complete Vector Brand Identity Kit:</strong> Includes logo design/vectorization, primary/secondary color system palette, typography hierarchy, SVG/EPS/PNG assets, and letterheads[cite: 8].</li>
+          <li><strong>Built-In Search Engine Optimization (SEO):</strong> On-page meta tags, geographic keyword targeting (e.g. Greater Accra/Ghana), Google Schema structured data, and search indexation[cite: 8].</li>
+          <li><strong>Interactive UI Canvas Animations:</strong> Custom background particle systems, glassmorphism cards, and interactive UI scripts[cite: 8].</li>
+        </ul>
+      </div>
+
+      <!-- PAGE 4 -->
+      <div class="doc-page">
+        <div class="doc-page-header">PAGE 4: Package 3 — One-Time Task Build (200 GHS)</div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px;">
+          An agile engineering service targeting standalone web edits, technical troubleshooting, feature additions, or custom API integrations[cite: 8].
+        </p>
+        <div class="doc-subheading">Supported Workscopes:</div>
+        <ul style="color: var(--text-muted); font-size: 0.88rem; padding-left: 20px; line-height: 1.7;">
+          <li><strong>Website Bug Fixing:</strong> Resolving layout breaks, CSS alignment issues, and JavaScript runtime errors[cite: 8].</li>
+          <li><strong>Feature Upgrades:</strong> Integrating Paystack checkout, Formspree web forms, or dynamic Google Maps embed modules[cite: 8].</li>
+          <li><strong>Page Content Edits:</strong> Modifying existing copy, swapping image assets, or re-styling color palettes.</li>
+          <li><strong>Rapid Turnaround:</strong> Typically executed within 24 to 48 hours depending on scope[cite: 8].</li>
+        </ul>
+      </div>
+
+      <!-- PAGE 5 -->
+      <div class="doc-page">
+        <div class="doc-page-header">PAGE 5: Payment Workflows, SLA & Quality Assurance</div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px;">
+          Operational standards and technical commitments maintained by KTakor Tech Solutions across all client engagements.
+        </p>
+        <div class="doc-subheading">Key Standards:</div>
+        <ul style="color: var(--text-muted); font-size: 0.88rem; padding-left: 20px; line-height: 1.7;">
+          <li><strong>Paystack Payment Security:</strong> PCI-DSS compliant payment processing supporting Mobile Money (MTN, Vodafone, AirtelTigo), Visa, Mastercard, and Bank Transfers in GHS[cite: 8].</li>
+          <li><strong>Automated Data Redundancy:</strong> Dual form submissions write intake responses simultaneously to Google Sheets via Apps Script and send real-time alerts through Formspree endpoints.</li>
+          <li><strong>Support & Warranty:</strong> 14 days of post-launch technical support for bug fixes and layout adjustments included across all project builds[cite: 8].</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center; margin-top: 20px;">
+        <button onclick="closeDocModal()" class="btn-glow" style="margin: 0 auto;">Close Documentation ➔</button>
+      </div>
+    </div>
+  </div>
+
   <footer>
     <div class="container">
-      <p style="margin-bottom: 10px;">KTakour Tech Solutions &copy; 2026. High-Performance Digital Architecture.</p>
+      <p style="margin-bottom: 10px;">KTakor Tech Solutions &copy; 2026. High-Performance Digital Architecture.</p>
       <p style="color: var(--text-muted); font-size: 0.8rem;">Direct Inquiries: <strong>ktakour.techsolutions2026@gmail.com</strong></p>
+      <div class="footer-nav-links">
+        <a onclick="openDocModal()">Service Specification Document</a>
+        <a onclick="openLegalModal('terms')">Terms of Service</a>
+        <a onclick="openLegalModal('privacy')">Privacy Policy</a>
+        <a onclick="openLegalModal('refund')">Cancellation & Refund Policy</a>
+      </div>
     </div>
   </footer>
 
   <script>
+    // App State Variables
+    let currentPendingForm = null;
+    let currentScriptUrl = 'https://script.google.com/macros/s/AKfycbwfuWbrMM4MlRUMK0dk6KkwfsYbkNFixf1-olnhonsh4psqTGoPSkpBWy9UDOXjZYiG/exec';
+    let activePaymentConfig = {
+      packageName: '',
+      amountGHS: 0,
+      email: ''
+    };
+
     function switchView(viewId) {
       document.querySelectorAll('.view-section').forEach(section => {
         section.classList.remove('active');
@@ -1727,42 +1585,156 @@
         target.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
+
+      // Update Navigation Active state
+      document.querySelectorAll('.nav-item-link').forEach(link => link.classList.remove('active-link'));
+      if (viewId === 'landing-view') document.getElementById('nav-link-landing')?.classList.add('active-link');
+      if (viewId === 'form-basic-view') document.getElementById('nav-link-basic')?.classList.add('active-link');
+      if (viewId === 'form-pro-view') document.getElementById('nav-link-pro')?.classList.add('active-link');
+      if (viewId === 'form-custom-view') document.getElementById('nav-link-custom')?.classList.add('active-link');
+
+      // Close mobile navigation menu if open
+      document.getElementById('nav-menu-list')?.classList.remove('mobile-open');
     }
 
-    function toggleGuideReader() {
-      const box = document.getElementById('guide-reader-box');
-      const btn = document.getElementById('toggle-guide-btn');
-      if (box.classList.contains('open')) {
-        box.classList.remove('open');
-        btn.innerHTML = 'Read 5-Page Guide 📖';
-      } else {
-        box.classList.add('open');
-        btn.innerHTML = 'Close Guide ✖';
+    function scrollToSection(sectionId) {
+      switchView('landing-view');
+      setTimeout(() => {
+        const target = document.getElementById(sectionId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+
+    function toggleMobileMenu() {
+      document.getElementById('nav-menu-list')?.classList.toggle('mobile-open');
+    }
+
+    /* Documentation Modal Controls */
+    function openDocModal() {
+      document.getElementById('doc-modal').classList.add('active');
+    }
+
+    function closeDocModal() {
+      document.getElementById('doc-modal').classList.remove('active');
+    }
+
+    /* Legal Modals Logic */
+    const legalTexts = {
+      terms: {
+        title: "Terms of Service",
+        body: "<p>Welcome to KTakor Tech Solutions. By requesting our services or submitting payment via Paystack, you agree to our service terms. We provide software engineering, web design, and development services as described in your intake specification form.</p><p>All deliverables remain the intellectual property of KTakor Tech Solutions until full invoice or payment completion, after which license rights are granted to the purchasing client.</p>"
+      },
+      privacy: {
+        title: "Privacy Policy",
+        body: "<p>At KTakor Tech Solutions, we respect your privacy. All contact information, corporate assets, and communication details submitted through our forms are strictly used to fulfill your project orders.</p><p>We do not share, sell, or disclose your personal or financial data to third parties, except as required to securely process payments through our payment gateway provider, Paystack.</p>"
+      },
+      refund: {
+        title: "Cancellation & Refund Policy",
+        body: "<p>We strive to ensure complete client satisfaction. Orders may be cancelled prior to project work commencement for a full refund.</p><p>Once development or custom design engineering has begun, refunds are evaluated on a pro-rata basis reflecting the work completed up to the date of cancellation notice sent to <strong>ktakour.techsolutions2026@gmail.com</strong>.</p>"
+      }
+    };
+
+    function openLegalModal(type) {
+      if (legalTexts[type]) {
+        document.getElementById('legal-modal-title').innerText = legalTexts[type].title;
+        document.getElementById('legal-modal-content').innerHTML = legalTexts[type].body;
+        document.getElementById('legal-modal').classList.add('active');
       }
     }
 
+    function closeLegalModal() {
+      document.getElementById('legal-modal').classList.remove('active');
+    }
+
     /**
-     * Enhanced Dual Submission Handler
-     * Prevents default submit, waits for Google Apps Script AND Formspree fetch calls 
-     * to complete synchronously, then redirects to Formspree confirmation.
+     * Step 1: Trigger Payment Modal Interface
      */
-    async function handleDualSubmit(event, googleScriptUrl) {
-      event.preventDefault(); // Stop standard form page reload
-
+    function handleProceedToPayment(event, packageName, amountGHS) {
+      event.preventDefault();
+      
       const form = event.target;
-      const submitBtn = form.querySelector('button[type="submit"]');
-      const originalText = submitBtn.innerText;
+      currentPendingForm = form;
 
-      submitBtn.disabled = true;
-      submitBtn.innerText = "Processing & Generating Invoice...";
+      // Extract client email from the current form dynamically
+      const emailInput = form.querySelector('input[type="email"]');
+      const emailVal = emailInput ? emailInput.value : '';
 
+      activePaymentConfig = {
+        packageName: packageName,
+        amountGHS: amountGHS,
+        email: emailVal
+      };
+
+      // Populate interface modal data
+      document.getElementById('modal-package-name').innerText = packageName;
+      document.getElementById('modal-client-email').innerText = emailVal;
+      document.getElementById('modal-total-amount').innerText = amountGHS.toLocaleString() + ' GHS';
+
+      // Open payment overlay
+      document.getElementById('payment-modal').classList.add('active');
+    }
+
+    function closePaymentModal() {
+      document.getElementById('payment-modal').classList.remove('active');
+    }
+
+    /**
+     * Step 2: Trigger Paystack Inline Popup
+     */
+    function executePaystackPayment() {
+      const payButton = document.getElementById('paystack-trigger-btn');
+      payButton.disabled = true;
+      payButton.innerText = "Opening Paystack Gateway...";
+
+      const handler = PaystackPop.setup({
+        key: 'pk_test_2c9b4ae8df11e66f8642692b7412e87441fb6a8f',
+        email: activePaymentConfig.email,
+        amount: activePaymentConfig.amountGHS * 100, // Amount converted to Pesewas
+        currency: 'GHS',
+        ref: 'KTK_' + Math.floor((Math.random() * 1000000000) + 1),
+        metadata: {
+          custom_fields: [
+            {
+              display_name: "Package Purchased",
+              variable_name: "package_purchased",
+              value: activePaymentConfig.packageName
+            }
+          ]
+        },
+        callback: function(response) {
+          alert('Payment Successful! Transaction Ref: ' + response.reference);
+          closePaymentModal();
+          submitFormData(response.reference);
+        },
+        onClose: function() {
+          alert('Payment process was cancelled.');
+          payButton.disabled = false;
+          payButton.innerHTML = '<span>Pay Now via Paystack</span> ➔';
+        }
+      });
+
+      handler.openIframe();
+    }
+
+    /**
+     * Step 3: Handle Formspree & Google Sheets Submissions after Payment
+     */
+    async function submitFormData(paymentRef) {
+      if (!currentPendingForm) return;
+
+      const form = currentPendingForm;
       const formData = new FormData(form);
+      if (paymentRef) {
+        formData.append('Paystack_Payment_Reference', paymentRef);
+      }
+
       const formspreeUrl = form.action;
 
       try {
-        // Send to Google Apps Script and Formspree simultaneously
         await Promise.allSettled([
-          fetch(googleScriptUrl, {
+          fetch(currentScriptUrl, {
             method: 'POST',
             body: formData,
             mode: 'no-cors'
@@ -1776,20 +1748,22 @@
           })
         ]);
 
-        // Submit form natively to show Formspree's success page
-        form.submit();
+        alert('Success! Your specification intake and payment verification have been submitted to KTakor Tech Solutions.');
+        form.reset();
+        switchView('landing-view');
       } catch (err) {
-        console.error('Error executing dual submit:', err);
-        form.submit();
+        console.error('Submission error:', err);
+        alert('An error occurred during submission. Please contact ktakour.techsolutions2026@gmail.com directly.');
       } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerText = originalText;
+        const payButton = document.getElementById('paystack-trigger-btn');
+        payButton.disabled = false;
+        payButton.innerHTML = '<span>Pay Now via Paystack</span> ➔';
       }
     }
 
     const codeLines = [
-      "// Initializing KTakour System Architecture",
-      "const platform = new KTakourTech();",
+      "// Initializing KTakor System Architecture",
+      "const platform = new KTakorTech();",
       "platform.configure({",
       "  speed: 'Ultra High Performance',",
       "  responsiveness: '100% Fluid Mobile/Desktop',",
@@ -1820,6 +1794,38 @@
       }
     }
 
+    // Grid Background Renderer
+    const gridCanvas = document.getElementById('grid-canvas');
+    if (gridCanvas) {
+      const gCtx = gridCanvas.getContext('2d');
+      function resizeGrid() {
+        gridCanvas.width = window.innerWidth;
+        gridCanvas.height = window.innerHeight;
+        drawGrid();
+      }
+      function drawGrid() {
+        gCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+        gCtx.strokeStyle = 'rgba(0, 242, 254, 0.15)';
+        gCtx.lineWidth = 1;
+        const step = 40;
+        for (let x = 0; x < gridCanvas.width; x += step) {
+          gCtx.beginPath();
+          gCtx.moveTo(x, 0);
+          gCtx.lineTo(x, gridCanvas.height);
+          gCtx.stroke();
+        }
+        for (let y = 0; y < gridCanvas.height; y += step) {
+          gCtx.beginPath();
+          gCtx.moveTo(0, y);
+          gCtx.lineTo(gridCanvas.width, y);
+          gCtx.stroke();
+        }
+      }
+      window.addEventListener('resize', resizeGrid);
+      resizeGrid();
+    }
+
+    // Particle Background Renderer
     const particleCanvas = document.getElementById('particle-canvas');
     if (particleCanvas) {
       const ctx = particleCanvas.getContext('2d');
